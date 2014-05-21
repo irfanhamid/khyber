@@ -6,11 +6,54 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXFileReference section */
+		6825F020192C185B007FFF5F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		6825F024192C1B41007FFF5F /* ProcessorCaps.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ProcessorCaps.hpp; path = src/lib/ProcessorCaps.hpp; sourceTree = "<group>"; };
+		6825F026192D1995007FFF5F /* Cpuid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cpuid.cpp; path = examples/cpuid/Cpuid.cpp; sourceTree = "<group>"; };
+		6825F027192D276E007FFF5F /* LICENSE.TXT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.TXT; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		6825F015192C12ED007FFF5F = {
 			isa = PBXGroup;
 			children = (
+				6825F027192D276E007FFF5F /* LICENSE.TXT */,
+				6825F021192C194F007FFF5F /* src */,
+				6825F020192C185B007FFF5F /* Makefile */,
 			);
+			sourceTree = "<group>";
+		};
+		6825F021192C194F007FFF5F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6825F023192C196C007FFF5F /* examples */,
+				6825F022192C1961007FFF5F /* lib */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		6825F022192C1961007FFF5F /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				6825F024192C1B41007FFF5F /* ProcessorCaps.hpp */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+		6825F023192C196C007FFF5F /* examples */ = {
+			isa = PBXGroup;
+			children = (
+				6825F025192D18D3007FFF5F /* cpuid */,
+			);
+			name = examples;
+			sourceTree = "<group>";
+		};
+		6825F025192D18D3007FFF5F /* cpuid */ = {
+			isa = PBXGroup;
+			children = (
+				6825F026192D1995007FFF5F /* Cpuid.cpp */,
+			);
+			name = cpuid;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -165,6 +208,7 @@
 				6825F01F192C12ED007FFF5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

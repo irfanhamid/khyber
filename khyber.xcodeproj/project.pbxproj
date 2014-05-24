@@ -11,6 +11,15 @@
 		6825F024192C1B41007FFF5F /* ProcessorCaps.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ProcessorCaps.hpp; path = src/lib/ProcessorCaps.hpp; sourceTree = "<group>"; };
 		6825F026192D1995007FFF5F /* Cpuid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cpuid.cpp; path = examples/cpuid/Cpuid.cpp; sourceTree = "<group>"; };
 		6825F027192D276E007FFF5F /* LICENSE.TXT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.TXT; sourceTree = "<group>"; };
+		6825F029192D2CA8007FFF5F /* Types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Types.hpp; path = src/lib/Types.hpp; sourceTree = "<group>"; };
+		6825F02A192D4C0E007FFF5F /* Array.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Array.hpp; path = src/lib/Array.hpp; sourceTree = "<group>"; };
+		6825F02B192D4F91007FFF5F /* SimdContainer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SimdContainer.hpp; path = src/lib/SimdContainer.hpp; sourceTree = "<group>"; };
+		6825F02C192E888E007FFF5F /* Array.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Array.cpp; path = src/lib/Array.cpp; sourceTree = "<group>"; };
+		6825F02E1930306F007FFF5F /* AvxInternals.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AvxInternals.cpp; path = src/lib/AvxInternals.cpp; sourceTree = "<group>"; };
+		6825F030193030A3007FFF5F /* AvxInternals.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AvxInternals.hpp; path = src/lib/AvxInternals.hpp; sourceTree = "<group>"; };
+		6825F0311930310F007FFF5F /* Avx2Internals.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Avx2Internals.hpp; path = src/lib/Avx2Internals.hpp; sourceTree = "<group>"; };
+		6825F0331930313C007FFF5F /* Avx2Internals.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Avx2Internals.cpp; path = src/lib/Avx2Internals.cpp; sourceTree = "<group>"; };
+		6825F03419303221007FFF5F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = src/lib/Makefile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -35,7 +44,16 @@
 		6825F022192C1961007FFF5F /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				6825F02C192E888E007FFF5F /* Array.cpp */,
+				6825F02A192D4C0E007FFF5F /* Array.hpp */,
+				6825F0331930313C007FFF5F /* Avx2Internals.cpp */,
+				6825F0311930310F007FFF5F /* Avx2Internals.hpp */,
+				6825F02E1930306F007FFF5F /* AvxInternals.cpp */,
+				6825F030193030A3007FFF5F /* AvxInternals.hpp */,
+				6825F03419303221007FFF5F /* Makefile */,
 				6825F024192C1B41007FFF5F /* ProcessorCaps.hpp */,
+				6825F02B192D4F91007FFF5F /* SimdContainer.hpp */,
+				6825F029192D2CA8007FFF5F /* Types.hpp */,
 			);
 			name = lib;
 			sourceTree = "<group>";

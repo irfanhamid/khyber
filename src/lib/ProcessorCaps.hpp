@@ -19,8 +19,8 @@
 #include <sstream>
 #include <boost/cstdint.hpp>
   
-#define cpuid(func, eax, ebx, ecx, edx)					\
-__asm__ __volatile__ ("cpuid":					\
+#define cpuid(func, eax, ebx, ecx, edx) \
+__asm__ __volatile__ ("cpuid":          \
 "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx) : "a" (func));
 
 #define BM_NO 0x00000000
@@ -112,59 +112,89 @@ namespace khyber
       }
     }
     
-    /**
-     * Returns true if the processor supports Hyperthreading Technology
-     */
+    ///
+    /// Returns true if Hyperthreading Technology is present
+    ///
     inline bool IsHtt() const
     {
       return _flags & BM_HTT;
     }
     
+    ///
+    /// Returns true if MMX technology is present
+    ///
     inline bool IsMmx() const
     {
       return _flags & BM_MMX;
     }
     
+    ///
+    /// Returns true if SSE technology is present
+    ///
     inline bool IsSse() const
     {
       return _flags & BM_SSE;
     }
     
+    ///
+    /// Returns true if SSE2 technology is present
+    ///
     inline bool IsSse2() const
     {
       return _flags & BM_SSE2;
     }
     
+    ///
+    /// Returns true if SSE3 technology is present
+    ///
     inline bool IsSse3() const
     {
       return _flags & BM_SSE3;
     }
     
+    ///
+    /// Returns true if SSE4.1 technology is present
+    ///
     inline bool IsSse4_1() const
     {
       return _flags & BM_SSE4_1;
     }
     
+    ///
+    /// Returns true if SSE4.2 technology is present
+    ///
     inline bool IsSse4_2() const
     {
       return _flags & BM_SSE4_2;
     }
     
+    ///
+    /// Returns true if AVX technology is present
+    ///
     inline bool IsAvx() const
     {
       return _flags & BM_AVX;
     }
     
+    ///
+    /// Returns true if AVX2 technology is present
+    ///
     inline bool IsAvx2() const
     {
       return _flags & BM_AVX2;
     }
     
+    ///
+    /// Returns true if the FMA instruction is present
+    ///
     inline bool IsFma() const
     {
       return _flags & BM_FMA;
     }
     
+    ///
+    /// Returns an std::string with formatted capability description
+    ///
     inline std::string GetCapsDescription() const
     {
       std::ostringstream caps_stream;
@@ -182,10 +212,10 @@ namespace khyber
       return caps_stream.str();
     }
     
-    std::size_t L1Cacheline;
-    std::size_t L2Cacheline;
-    uint32_t HighestFunction;
-    uint32_t HighestExtFunction;
+    std::size_t L1Cacheline;      /// L1 cacheline size, in bytes
+    std::size_t L2Cacheline;      /// L2 cacheline size, in bytes
+    uint32_t HighestFunction;     /// Highest supported function for the CPUID instruction
+    uint32_t HighestExtFunction;  /// Highest supported extension function for the CPUID instruction
     
   private:
 

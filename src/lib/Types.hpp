@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <iostream>
-#include "ProcessorCaps.hpp"
+#pragma once
 
-using namespace std;
+#include <boost/cstdint.hpp>
 
-int main(int argc, char* argv[])
+#define DEFAULT_ALIGNMENT 32
+
+namespace khyber
 {
-  khyber::ProcessorCaps pcaps;
-  cout << pcaps.GetCapsDescription() << endl;
-  
-  return 0;
+  typedef __declspec(align(DEFAULT_ALIGNMENT))uint16_t ui16_t;
+  typedef __declspec(align(DEFAULT_ALIGNMENT))uint32_t ui32_t;
+  typedef __declspec(align(DEFAULT_ALIGNMENT))uint64_t ui64_t;
+  typedef __declspec(align(DEFAULT_ALIGNMENT))int16_t i16_t;
+  typedef __declspec(align(DEFAULT_ALIGNMENT))int32_t i32_t;
+  typedef __declspec(align(DEFAULT_ALIGNMENT))int64_t i64_t;  
+  typedef __declspec(align(DEFAULT_ALIGNMENT))float sp_t;
+  typedef __declspec(align(DEFAULT_ALIGNMENT))double dp_t;
 }

@@ -12,15 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <iostream>
-#include "ProcessorCaps.hpp"
+#pragma once
 
-using namespace std;
+#include <cstdint>
+#include "Types.hpp"
 
-int main(int argc, char* argv[])
+namespace khyber
 {
-  khyber::ProcessorCaps pcaps;
-  cout << pcaps.GetCapsDescription() << endl;
-  
-  return 0;
+  namespace avx2
+  {
+    void InternalAdd(size_t size,
+                     sp_t* sum,
+                     sp_t* addend0,
+                     sp_t* addend1);
+    
+    void InternalAddAcc(size_t size,
+                        sp_t* acc,
+                        sp_t* addend);
+  }
 }

@@ -42,9 +42,41 @@ namespace khyber
     ///
     /// Return the dimension (size) of this array
     ///
-    size_t Dimension() const
+    inline size_t Dimension() const
     {
-      return SimdContainer<T>::_size;
+      return this->_size;
+    }
+    
+    ///
+    /// Returns reference to element at location index within the underlying buffer
+    ///
+    inline T& At(size_t index)
+    {
+      return this->_buffer[index];
+    }
+    
+    ///
+    /// Returns const reference to element at location index within the underlying buffer
+    ///
+    const inline T& At(size_t index) const
+    {
+      return this->_buffer[index];
+    }
+
+    ///
+    /// Returns reference to element at location index within the underlying buffer
+    ///
+    inline T& operator [] (size_t index)
+    {
+      return this->_buffer[index];
+    }
+    
+    ///
+    /// Returns const reference to element at location index within the underlying buffer
+    ///
+    const inline T& operator [] (size_t index) const
+    {
+      return this->_buffer[index];
     }
     
     ///
@@ -67,16 +99,24 @@ namespace khyber
     Array<T>& Avx2AddAccImpl(const Array<T>& addent);
     
     Array<T>&& AvxAddImpl(const Array<T>& addend) const;
-    Array<T>& AvxAddAccImpl(const Array<T>& addent);
+    Array<T>& AvxAddAccImpl(const Array<T>& addend);
     
     Array<T>&& BaseAddImpl(const Array<T>& addend) const
     {
       Array<T> sum(SimdContainer<T>::_size);
+      for ( size_t i = 0; i < this->_size; ++i )
+      {
+        sum[i] = this->_buffer[i] + addend._buffer[i];
+      }
       return std::move(sum);
     }
 
-    Array<T>& BaseAddAccImpl(const Array<T>& addent)
+    Array<T>& BaseAddAccImpl(const Array<T>& addend)
     {
+      for ( size_t i = 0; i < this->_size; ++i )
+      {
+        this->_buffer[i] += addend._buffer[i];
+      }
       return *this;
     }
   };

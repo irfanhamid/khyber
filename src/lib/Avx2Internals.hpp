@@ -21,11 +21,21 @@ namespace khyber
 {
   namespace avx2
   {
+    ///
+    /// Using Intel64 AVX2 instructions:
+    /// Add the two single-precision floating point arrays addend0 and addend1 of size elements into sum
+    /// sum[0:size-1] = addend0[0:size-1] + addend1[0:size-1]
+    ///
     void InternalAdd(size_t size,
                      sp_t* sum,
                      sp_t* addend0,
                      sp_t* addend1);
     
+    ///
+    /// Using Intel64 AVX instructions:
+    /// Add the single-precision floating point array addend of size elements into acc
+    /// acc[0:size-1] = acc[0:size-1 + addend[0:size-1]
+    ///
     void InternalAddAcc(size_t size,
                         sp_t* acc,
                         sp_t* addend);

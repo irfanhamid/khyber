@@ -29,7 +29,6 @@ namespace khyber
                         sp_t* acc,
                         sp_t* addend)
     {
-      
     }
   }
 }

@@ -81,9 +81,16 @@ namespace khyber
       return _size * sizeof(T);
     }
     
+    ///
+    /// Get the underlying buffer. Use this method with extreme care
+    ///
+    const T* GetBuffer() const
+    {
+      return _buffer.get();
+    }
+    
   protected:
-    static ProcessorCaps    _procCaps;
-
+    ProcessorCaps           _procCaps;
     boost::scoped_array<T>  _buffer;
     size_t                  _size;
     

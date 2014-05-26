@@ -17,7 +17,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <boost/cstdint.hpp>
+#include <cstdint>
   
 #define cpuid(func, eax, ebx, ecx, edx) \
 __asm__ __volatile__ ("cpuid":          \

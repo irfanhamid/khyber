@@ -15,10 +15,10 @@
 #pragma once
 
 #include <stdlib.h>
-#include <boost/scoped_array.hpp>
+#include "Types.hpp"
 #include "ProcessorCaps.hpp"
 
-#define DEFAULT_CONTAINER_SIZE
+#define DEFAULT_CONTAINER_SIZE 512
 
 namespace khyber
 {
@@ -28,41 +28,75 @@ namespace khyber
   public:
     typedef T value_type;
     
+    virtual ~SimdContainer()
+    {
+      if ( _buffer )
+        free(_buffer);
+    }
+    
     ///
     /// Construct a container of default size
     ///
-    SimdContainer()
+    SimdContainer() : _buffer(NULL)
     {
       this->Allocate(DEFAULT_CONTAINER_SIZE);
-      memset(_buffer.get(), 0, this->SizeInBytes());
+      memset(_buffer, 0, this->SizeInBytes());
     }
     
     ///
     /// Construct a container of specified size
     ///
-    SimdContainer(size_t capacity)
+    SimdContainer(size_t capacity) : _buffer(NULL)
     {
       this->Allocate(capacity);
-      memset(_buffer.get(), 0, this->SizeInBytes());
+      memset(_buffer, 0, this->SizeInBytes());
     }
     
     ///
-    /// Initialize contents from given container
+    /// Const copy constructor
     ///
-    SimdContainer(const SimdContainer<T>& rhs)
+    SimdContainer(const SimdContainer<T>& rhs) : _buffer(NULL)
     {
       this->Allocate(rhs.Size());
-      memcpy(_buffer.get(), rhs._buffer.get(), rhs.SizeInBytes());
+      memcpy(_buffer, rhs._buffer, rhs.SizeInBytes());
     }
     
     ///
-    /// Move constructor from another SimdContainer
+    /// Copy constructor
     ///
-    SimdContainer(SimdContainer<T>&& rhs) : _size(rhs._size)
+    SimdContainer(SimdContainer<T>& rhs) : _buffer(NULL)
     {
-      _buffer.set(rhs._buffer);
-      rhs._size = 0;
-      rhs._buffer.set(NULL);
+      this->Allocate(rhs.Size());
+      memcpy(_buffer, rhs._buffer, rhs.SizeInBytes());
+    }
+    
+    ///
+    /// Move constructor
+    ///
+    SimdContainer(SimdContainer<T>&& rhs) : _buffer(nullptr)
+    {
+      Reset(rhs._buffer, rhs._size);
+      rhs._buffer = NULL;
+    }
+    
+    ///
+    /// Move assignment operator
+    ///
+    SimdContainer<T>& operator = (SimdContainer<T>&& rhs)
+    {
+      Reset(rhs._buffer, rhs._size);
+      rhs._buffer = NULL;
+      return *this;
+    }
+    
+    ///
+    /// Copy assignment operator
+    ///
+    SimdContainer<T>& operator = (SimdContainer<T>& rhs)
+    {
+      this->Allocate(rhs.Size());
+      memcpy(_buffer, rhs._buffer, rhs.SizeInBytes());
+      return *this;
     }
     
     ///
@@ -84,21 +118,31 @@ namespace khyber
     ///
     /// Get the underlying buffer. Use this method with extreme care
     ///
-    const T* GetBuffer() const
+    T* GetBuffer() const
     {
-      return _buffer.get();
+      return _buffer;
     }
     
   protected:
-    ProcessorCaps           _procCaps;
-    boost::scoped_array<T>  _buffer;
-    size_t                  _size;
+    ProcessorCaps _procCaps;
+    T*            _buffer;
+    size_t        _size;
     
     void Allocate(size_t capacity)
     {
-      T* tmpBuffer;
-      posix_memalign((void**)&tmpBuffer, DEFAULT_ALIGNMENT, capacity * sizeof(T));
-      _buffer.reset(tmpBuffer);
+      if ( _buffer )
+        free(_buffer);
+
+      posix_memalign((void**)&_buffer, DEFAULT_ALIGNMENT, capacity * sizeof(T));
+      _size = capacity;
+    }
+    
+    void Reset(T* buffer, size_t capacity)
+    {
+      if ( _buffer )
+        free(_buffer);
+
+      _buffer = buffer;
       _size = capacity;
     }
   };

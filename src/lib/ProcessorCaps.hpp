@@ -21,7 +21,7 @@
   
 #define cpuid(func, eax, ebx, ecx, edx) \
 __asm__ __volatile__ ("cpuid":          \
-"=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx) : "a" (func));
+"=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx) : "a" (func), "c" (ecx));
 
 #define BM_NO 0x00000000
 #define BM_00 0x00000001
@@ -107,6 +107,7 @@ namespace khyber
       }
       
       if ( HighestFunction >= 7 ) {
+        ecx = 0;
         cpuid(7, eax, ebx, ecx, edx);
         capset(_flags, ebx, 05, AVX2);
       }

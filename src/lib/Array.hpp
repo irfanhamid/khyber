@@ -23,20 +23,61 @@
 namespace khyber
 {
   ///
-  /// Provides a growable vector implementation with built-in SIMD compute capability
+  /// Provides a fixed-size vector implementation with built-in SIMD compute capability
   ///
   template<typename T>
   class Array : public SimdContainer<T>
   {
   public:
-    Array()
+    ///
+    /// Basic constructor
+    ///
+    Array() : SimdContainer<T>()
     {
       BuildArchBinding();
     }
     
+    ///
+    /// Constructor with specified capacity for the array
+    ///
     Array(size_t capacity) : SimdContainer<T>(capacity)
     {
       BuildArchBinding();
+    }
+    
+    ///
+    /// Copy constructor
+    ///
+    Array(const Array<T>& rhs) : SimdContainer<T>((const SimdContainer<T>&) rhs)
+    {
+      BuildArchBinding();
+    }
+    
+    ///
+    /// Move constructor
+    ///
+    Array(Array<T>&& rhs) : SimdContainer<T>((SimdContainer<T>&&) rhs)
+    {
+      BuildArchBinding();
+    }
+    
+    ///
+    /// Move assignment operator
+    ///
+    Array<T>& operator = (Array<T>&& rhs)
+    {
+      // (SimdContainer<T>)*this = std::move(static_cast<SimdContainer<T> >(rhs));
+      SimdContainer<T>::operator =(std::move(rhs));
+      return *this;
+    }
+    
+    ///
+    /// Copy assignment operator
+    ///
+    Array<T>& operator = (Array<T>& rhs)
+    {
+      (SimdContainer<T>)*this = (SimdContainer<T>)rhs;
+      return *this;
     }
     
     ///
@@ -83,7 +124,7 @@ namespace khyber
     /// Add contents of "this" and addend arrays into a new array and return it.
     /// Consider using AddAcc() instead.
     ///
-    Array<T>&& Add(const Array<T>& addend) const;
+    Array<T> Add(const Array<T>& addend) const;
     
     ///
     /// Add contents of addend into "this" and return it.
@@ -91,21 +132,22 @@ namespace khyber
     Array<T>& AddAcc(const Array<T>& addend);
     
   protected:
-    boost::function<Array<T>&& (const Array<T>*, const Array<T>&)> AddImpl;
-    boost::function<Array<T>& (Array<T>*, const Array<T>&)> AddAccImpl;
+    //boost::function<Array<T>&& (const Array<T>*, const Array<T>&)> AddImpl;
+    //boost::function<Array<T>& (Array<T>*, const Array<T>&)> AddAccImpl;
+    Array<T> (Array<T>::*AddImpl) (const Array<T>&) const;
+    Array<T>& (Array<T>::*AddAccImpl) (const Array<T>&);
     void BuildArchBinding();
     
-    Array<T>&& Avx2AddImpl(const Array<T>& addend) const;
-    Array<T>& Avx2AddAccImpl(const Array<T>& addent);
+    Array<T> Avx2AddImpl(const Array<T>& addend) const;
+    Array<T>& Avx2AddAccImpl(const Array<T>& addend);
     
-    Array<T>&& AvxAddImpl(const Array<T>& addend) const;
+    Array<T> AvxAddImpl(const Array<T>& addend) const;
     Array<T>& AvxAddAccImpl(const Array<T>& addend);
     
-    Array<T>&& BaseAddImpl(const Array<T>& addend) const
+    Array<T> BaseAddImpl(const Array<T>& addend) const
     {
       Array<T> sum(SimdContainer<T>::_size);
-      for ( size_t i = 0; i < this->_size; ++i )
-      {
+      for ( size_t i = 0; i < this->_size; ++i ) {
         sum[i] = this->_buffer[i] + addend._buffer[i];
       }
       return std::move(sum);
@@ -114,9 +156,8 @@ namespace khyber
     Array<T>& BaseAddAccImpl(const Array<T>& addend)
     {
       for ( size_t i = 0; i < this->_size; ++i )
-      {
         this->_buffer[i] += addend._buffer[i];
-      }
+
       return *this;
     }
   };

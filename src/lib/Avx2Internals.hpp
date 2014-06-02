@@ -32,7 +32,7 @@ namespace khyber
                      sp_t* addend1);
     
     ///
-    /// Using Intel64 AVX instructions:
+    /// Using Intel64 AVX2 instructions:
     /// Add the single-precision floating point array addend of size elements into acc
     /// acc[0:size-1] = acc[0:size-1 + addend[0:size-1]
     ///

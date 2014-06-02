@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <immintrin.h>
+#include <iostream>
 #include "Avx2Internals.hpp"
 
 namespace khyber
@@ -23,6 +25,13 @@ namespace khyber
                      sp_t* addend0,
                      sp_t* addend1)
     {
+      __m256* pSum = (__m256*)sum;
+      __m256* pAddend0 = (__m256*)addend0;
+      __m256* pAddend1 = (__m256*)addend1;
+
+      for ( size_t i = 0; i < (size >> 3); ++i ) {
+        pSum[i] = _mm256_add_ps(pAddend0[i], pAddend1[i]);
+      }
     }
 
     void InternalAddAcc(size_t size,

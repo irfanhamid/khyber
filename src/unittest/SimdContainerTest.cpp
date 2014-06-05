@@ -19,25 +19,25 @@ BOOST_AUTO_TEST_SUITE(SimdContainerTestSuite)
 
 khyber::SimdContainer<khyber::sp_t> MakeContainer(khyber::sp_t** addr)
 {
-  khyber::SimdContainer<khyber::sp_t> temp;
+  khyber::SimdContainer<khyber::sp_t> temp(512);
   *addr = temp.GetBuffer();
   return std::move(temp);
 }
 
 BOOST_AUTO_TEST_CASE(TestSimdContainerConstructors)
 {
-  khyber::SimdContainer<khyber::sp_t> c0;
-  BOOST_CHECK(c0.Size() == 512);
+  khyber::SimdContainer<khyber::sp_t> c0(512);
+  BOOST_CHECK(c0.Capacity() == 512);
   for ( size_t i = 0; i < 512; ++i )
     c0.GetBuffer()[i] = i;
 
   khyber::SimdContainer<khyber::sp_t> c1(c0);
-  BOOST_CHECK(c1.Size() == 512);
+  BOOST_CHECK(c1.Capacity() == 512);
   BOOST_CHECK(c0.GetBuffer() != c1.GetBuffer());
   for ( size_t i = 0; i < 512; ++i )
     BOOST_CHECK(c0.GetBuffer()[i] == c1.GetBuffer()[i]);
   
-  khyber::SimdContainer<khyber::sp_t> c2;
+  khyber::SimdContainer<khyber::sp_t> c2(512);
   c2 = c1;
   BOOST_CHECK(c1.GetBuffer() != c2.GetBuffer());
   for ( size_t i = 0; i < 512; ++i )

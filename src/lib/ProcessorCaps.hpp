@@ -198,19 +198,19 @@ namespace khyber
     ///
     inline std::string GetCapsDescription() const
     {
-      std::ostringstream caps_stream;
-      caps_stream << "HTT\t" << (IsHtt() ? "yes" : "no") << std::endl;
-      caps_stream << "MMX\t" << (IsMmx() ? "yes" : "no") << std::endl;
-      caps_stream << "SSE\t" << (IsSse() ? "yes" : "no") << std::endl;
-      caps_stream << "SSE2\t" << (IsSse2() ? "yes" : "no") << std::endl;
-      caps_stream << "SSE3\t" << (IsSse3() ? "yes" : "no") << std::endl;
-      caps_stream << "SSE4.1\t" << (IsSse4_1() ? "yes" : "no") << std::endl;
-      caps_stream << "SSE4.2\t" << (IsSse4_2() ? "yes" : "no") << std::endl;
-      caps_stream << "AVX\t" << (IsAvx() ? "yes" : "no") << std::endl;
-      caps_stream << "AVX2\t" << (IsAvx2() ? "yes" : "no") << std::endl;
-      caps_stream << "FMA\t" << (IsFma() ? "yes" : "no") << std::endl;
+      std::ostringstream capsStream;
+      capsStream << "HTT\t" << (IsHtt() ? "yes" : "no") << std::endl;
+      capsStream << "MMX\t" << (IsMmx() ? "yes" : "no") << std::endl;
+      capsStream << "SSE\t" << (IsSse() ? "yes" : "no") << std::endl;
+      capsStream << "SSE2\t" << (IsSse2() ? "yes" : "no") << std::endl;
+      capsStream << "SSE3\t" << (IsSse3() ? "yes" : "no") << std::endl;
+      capsStream << "SSE4.1\t" << (IsSse4_1() ? "yes" : "no") << std::endl;
+      capsStream << "SSE4.2\t" << (IsSse4_2() ? "yes" : "no") << std::endl;
+      capsStream << "AVX\t" << (IsAvx() ? "yes" : "no") << std::endl;
+      capsStream << "AVX2\t" << (IsAvx2() ? "yes" : "no") << std::endl;
+      capsStream << "FMA\t" << (IsFma() ? "yes" : "no") << std::endl;
       
-      return caps_stream.str();
+      return capsStream.str();
     }
     
     std::size_t L1Cacheline;      /// L1 cacheline size, in bytes

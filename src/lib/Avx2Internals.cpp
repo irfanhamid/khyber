@@ -22,28 +22,37 @@ namespace khyber
   {
     void InternalAdd(size_t size,
                      sp_t* sum,
-                     const sp_t* addend0,
-                     const sp_t* addend1)
+                     const sp_t* augend,
+                     const sp_t* addend)
     {
       __m256* pSum = (__m256*)sum;
-      __m256* pAddend0 = (__m256*)addend0;
-      __m256* pAddend1 = (__m256*)addend1;
-
-      for ( size_t i = 0; i < (size >> 3); ++i ) {
-        pSum[i] = _mm256_add_ps(pAddend0[i], pAddend1[i]);
-      }
-    }
-
-    /*void InternalAddAcc(size_t size,
-                        sp_t* acc,
-                        sp_t* addend)
-    {
-      __m256* pSum = (__m256*)acc;
+      __m256* pAugend = (__m256*)augend;
       __m256* pAddend = (__m256*)addend;
 
       for ( size_t i = 0; i < (size >> 3); ++i ) {
-        pSum[i] = _mm256_add_ps(pSum[i], pAddend[i]);
+        pSum[i] = _mm256_add_ps(pAugend[i], pAddend[i]);
       }
-    }*/
+    }
+
+    void InternalSub(size_t size,
+                     sp_t* difference,
+                     const sp_t* minuend,
+                     const sp_t* subtrahend)
+    {
+    }
+
+    void InternalMul(size_t size,
+                     sp_t* product,
+                     const sp_t* multiplicand,
+                     const sp_t* multiplier)
+    {
+    }
+
+    void InternalDiv(size_t size,
+                     sp_t* quotient,
+                     const sp_t* dividend,
+                     const sp_t* divisor)
+    {
+    }
   }
 }

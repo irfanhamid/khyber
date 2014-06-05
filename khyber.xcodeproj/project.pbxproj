@@ -20,12 +20,18 @@
 		6825F0311930310F007FFF5F /* Avx2Internals.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Avx2Internals.hpp; path = src/lib/Avx2Internals.hpp; sourceTree = "<group>"; };
 		6825F0331930313C007FFF5F /* Avx2Internals.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Avx2Internals.cpp; path = src/lib/Avx2Internals.cpp; sourceTree = "<group>"; };
 		6825F03419303221007FFF5F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = src/lib/Makefile; sourceTree = "<group>"; };
+		6825F03619316EEE007FFF5F /* ArrayTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ArrayTest.cpp; path = src/unittest/ArrayTest.cpp; sourceTree = "<group>"; };
+		6825F03719324917007FFF5F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = src/unittest/Makefile; sourceTree = "<group>"; };
+		68E9AABF1937DAE100AA4E30 /* SimdContainerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimdContainerTest.cpp; path = src/unittest/SimdContainerTest.cpp; sourceTree = "<group>"; };
+		68E9AAC01937F4CD00AA4E30 /* KhyberTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KhyberTest.cpp; path = src/unittest/KhyberTest.cpp; sourceTree = "<group>"; };
+		68E9AAC219385A8600AA4E30 /* AvxInternalsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AvxInternalsTest.cpp; path = src/unittest/AvxInternalsTest.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		6825F015192C12ED007FFF5F = {
 			isa = PBXGroup;
 			children = (
+				6825F023192C196C007FFF5F /* examples */,
 				6825F027192D276E007FFF5F /* LICENSE.TXT */,
 				6825F021192C194F007FFF5F /* src */,
 				6825F020192C185B007FFF5F /* Makefile */,
@@ -35,7 +41,7 @@
 		6825F021192C194F007FFF5F /* src */ = {
 			isa = PBXGroup;
 			children = (
-				6825F023192C196C007FFF5F /* examples */,
+				6825F03519316A79007FFF5F /* unittest */,
 				6825F022192C1961007FFF5F /* lib */,
 			);
 			name = src;
@@ -72,6 +78,18 @@
 				6825F026192D1995007FFF5F /* Cpuid.cpp */,
 			);
 			name = cpuid;
+			sourceTree = "<group>";
+		};
+		6825F03519316A79007FFF5F /* unittest */ = {
+			isa = PBXGroup;
+			children = (
+				6825F03719324917007FFF5F /* Makefile */,
+				6825F03619316EEE007FFF5F /* ArrayTest.cpp */,
+				68E9AABF1937DAE100AA4E30 /* SimdContainerTest.cpp */,
+				68E9AAC01937F4CD00AA4E30 /* KhyberTest.cpp */,
+				68E9AAC219385A8600AA4E30 /* AvxInternalsTest.cpp */,
+			);
+			name = unittest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

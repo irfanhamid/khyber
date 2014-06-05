@@ -34,11 +34,25 @@ namespace khyber
       }
     }
 
-    /*
-    void InternalAddAcc(size_t size,
-                        sp_t* acc,
-                        const sp_t* addend)
+    void InternalSub(size_t size,
+                     sp_t* difference,
+                     const sp_t* minuend,
+                     const sp_t* subtrahend)
     {
-    }*/
+    }
+
+    void InternalMul(size_t size,
+                     sp_t* product,
+                     const sp_t* multiplicand,
+                     const sp_t* multiplier)
+    {
+    }
+
+    void InternalDiv(size_t size,
+                     sp_t* quotient,
+                     const sp_t* dividend,
+                     const sp_t* divisor)
+    {
+    }
   }
 }

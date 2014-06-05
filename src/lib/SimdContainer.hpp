@@ -15,8 +15,10 @@
 #pragma once
 
 #include <stdlib.h>
+#include <vector>
 #include "Types.hpp"
 #include "ProcessorCaps.hpp"
+#include "SimdAllocator.hpp"
 
 #define DEFAULT_CONTAINER_SIZE 512
 
@@ -28,55 +30,43 @@ namespace khyber
   public:
     typedef T value_type;
     
-    virtual ~SimdContainer()
-    {
-      if ( _buffer )
-        free(_buffer);
-    }
-    
     ///
     /// Construct a container of default size
     ///
-    SimdContainer() : _buffer(NULL)
+    SimdContainer()
     {
-      this->Allocate(DEFAULT_CONTAINER_SIZE);
-      memset(_buffer, 0, this->SizeInBytes());
+      _buffer.resize(DEFAULT_CONTAINER_SIZE);
     }
-    
+
     ///
     /// Construct a container of specified size
     ///
-    SimdContainer(size_t capacity) : _buffer(NULL)
+    SimdContainer(size_t capacity)
     {
-      this->Allocate(capacity);
-      memset(_buffer, 0, this->SizeInBytes());
+      _buffer.resize(capacity);
     }
     
     ///
     /// Const copy constructor
     ///
-    SimdContainer(const SimdContainer<T>& rhs) : _buffer(NULL)
+    SimdContainer(const SimdContainer<T>& rhs)
     {
-      this->Allocate(rhs.Size());
-      memcpy(_buffer, rhs._buffer, rhs.SizeInBytes());
+      _buffer.assign(rhs._buffer.begin(), rhs._buffer.end());
     }
     
     ///
     /// Copy constructor
     ///
-    SimdContainer(SimdContainer<T>& rhs) : _buffer(NULL)
+    SimdContainer(SimdContainer<T>& rhs)
     {
-      this->Allocate(rhs.Size());
-      memcpy(_buffer, rhs._buffer, rhs.SizeInBytes());
+      _buffer.assign(rhs._buffer.begin(), rhs._buffer.end());
     }
     
     ///
     /// Move constructor
     ///
-    SimdContainer(SimdContainer<T>&& rhs) : _buffer(nullptr)
+    SimdContainer(SimdContainer<T>&& rhs) : _buffer(std::move(rhs._buffer))
     {
-      Reset(rhs._buffer, rhs._size);
-      rhs._buffer = NULL;
     }
     
     ///
@@ -84,8 +74,7 @@ namespace khyber
     ///
     SimdContainer<T>& operator = (SimdContainer<T>&& rhs)
     {
-      Reset(rhs._buffer, rhs._size);
-      rhs._buffer = NULL;
+      _buffer = std::move(rhs._buffer);
       return *this;
     }
     
@@ -94,8 +83,7 @@ namespace khyber
     ///
     SimdContainer<T>& operator = (SimdContainer<T>& rhs)
     {
-      this->Allocate(rhs.Size());
-      memcpy(_buffer, rhs._buffer, rhs.SizeInBytes());
+      _buffer.assign(rhs._buffer.begin(), rhs._buffer.end());
       return *this;
     }
     
@@ -104,7 +92,15 @@ namespace khyber
     ///
     size_t Size() const
     {
-      return _size;
+      return _buffer.size();
+    }
+
+    ///
+    /// Returns the capacity of the underlying container
+    ///
+    size_t Capacity() const
+    {
+      return _buffer.capacity();
     }
              
     ///
@@ -112,38 +108,19 @@ namespace khyber
     ///
     size_t SizeInBytes() const
     {
-      return _size * sizeof(T);
+      return _buffer.size() * sizeof(T);
     }
     
     ///
     /// Get the underlying buffer. Use this method with extreme care
     ///
-    T* GetBuffer() const
+    T* GetBuffer()
     {
-      return _buffer;
+      return _buffer.data();
     }
     
   protected:
     ProcessorCaps _procCaps;
-    T*            _buffer;
-    size_t        _size;
-    
-    void Allocate(size_t capacity)
-    {
-      if ( _buffer )
-        free(_buffer);
-
-      posix_memalign((void**)&_buffer, DEFAULT_ALIGNMENT, capacity * sizeof(T));
-      _size = capacity;
-    }
-    
-    void Reset(T* buffer, size_t capacity)
-    {
-      if ( _buffer )
-        free(_buffer);
-
-      _buffer = buffer;
-      _size = capacity;
-    }
+    std::vector<T, SimdAllocator<T, DEFAULT_ALIGNMENT>> _buffer;
   };
 }

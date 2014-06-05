@@ -14,16 +14,12 @@
 
 #pragma once
 
-#include <boost/scoped_array.hpp>
-#include <boost/function.hpp>
-
-#include "Types.hpp"
 #include "SimdContainer.hpp"
 
 namespace khyber
 {
   ///
-  /// Provides a fixed-size vector implementation with built-in SIMD compute capability
+  /// Provides a growable vector implementation with built-in SIMD compute capability
   ///
   template<typename T>
   class Array : public SimdContainer<T>
@@ -36,7 +32,7 @@ namespace khyber
     {
       BuildArchBinding();
     }
-    
+
     ///
     /// Constructor with specified capacity for the array
     ///
@@ -66,7 +62,6 @@ namespace khyber
     ///
     Array<T>& operator = (Array<T>&& rhs)
     {
-      // (SimdContainer<T>)*this = std::move(static_cast<SimdContainer<T> >(rhs));
       SimdContainer<T>::operator =(std::move(rhs));
       return *this;
     }
@@ -85,7 +80,7 @@ namespace khyber
     ///
     inline size_t Dimension() const
     {
-      return this->_size;
+      return this->Size();
     }
     
     ///
@@ -132,8 +127,8 @@ namespace khyber
     Array<T>& AddAcc(const Array<T>& addend);
     
   protected:
-    //boost::function<Array<T>&& (const Array<T>*, const Array<T>&)> AddImpl;
-    //boost::function<Array<T>& (Array<T>*, const Array<T>&)> AddAccImpl;
+    // The following two function pointers are bound to one of the *<op>Impl( ) member functions
+    // below based on the ProcessorCaps object which determines the CPU's capabilities
     Array<T> (Array<T>::*AddImpl) (const Array<T>&) const;
     Array<T>& (Array<T>::*AddAccImpl) (const Array<T>&);
     void BuildArchBinding();
@@ -146,8 +141,8 @@ namespace khyber
     
     Array<T> BaseAddImpl(const Array<T>& addend) const
     {
-      Array<T> sum(SimdContainer<T>::_size);
-      for ( size_t i = 0; i < this->_size; ++i ) {
+      Array<T> sum(this->_buffer.size());
+      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
         sum[i] = this->_buffer[i] + addend._buffer[i];
       }
       return std::move(sum);
@@ -155,7 +150,7 @@ namespace khyber
 
     Array<T>& BaseAddAccImpl(const Array<T>& addend)
     {
-      for ( size_t i = 0; i < this->_size; ++i )
+      for ( size_t i = 0; i < this->_buffer.size(); ++i )
         this->_buffer[i] += addend._buffer[i];
 
       return *this;

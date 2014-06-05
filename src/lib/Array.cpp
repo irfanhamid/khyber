@@ -21,56 +21,56 @@ namespace khyber
   template<>
   Array<sp_t> Array<sp_t>::Add(const Array<sp_t>& addend) const
   {
-    // return AddImpl(this, addend);
-
     // This ugliness (and the one in AddAcc( ) is for pointer-to-member-function
+    // I know we could use boost::function, and I did, but that is much slower
     return (this->*AddImpl)(addend);
   }
   
   template<>
   Array<sp_t>& Array<sp_t>::AddAcc(const Array<sp_t>& addend)
   {
-    //return AddAccImpl(this, addend);
     return (this->*AddAccImpl)(addend);
   }
   
   template<>
   Array<sp_t> Array<sp_t>::Avx2AddImpl(const Array<sp_t>& addend) const
   {
-    Array<sp_t> sum(_size);
-    avx2::InternalAdd(_size,
-                      sum._buffer,
-                      _buffer,
-                      addend._buffer);
+    Array<sp_t> sum(this->_buffer.size());
+    avx2::InternalAdd(this->_buffer.size(),
+                      sum._buffer.data(),
+                      this->_buffer.data(),
+                      addend._buffer.data());
     return std::move(sum);
   }
   
   template<>
   Array<sp_t>& Array<sp_t>::Avx2AddAccImpl(const Array<sp_t>& addend)
   {
-    avx2::InternalAddAcc(_size,
-                         _buffer,
-                         addend._buffer);
+    avx2::InternalAdd(this->_buffer.size(),
+                      this->_buffer.data(),
+                      this->_buffer.data(),
+                      addend._buffer.data());
     return *this;
   }
   
   template<>
   Array<sp_t> Array<sp_t>::AvxAddImpl(const Array<sp_t>& addend) const
   {
-    Array<sp_t> sum(_size);
-    avx::InternalAdd(_size,
-                     sum._buffer,
-                     _buffer,
-                     addend._buffer);
+    Array<sp_t> sum(this->_buffer.size());
+    avx::InternalAdd(this->_buffer.size(),
+                     sum._buffer.data(),
+                     this->_buffer.data(),
+                     addend._buffer.data());
     return std::move(sum);
   }
   
   template<>
   Array<sp_t>& Array<sp_t>::AvxAddAccImpl(const Array<sp_t>& addend)
   {
-    avx::InternalAddAcc(_size,
-                        _buffer,
-                        addend._buffer);
+    avx::InternalAdd(this->_buffer.size(),
+                     this->_buffer.data(),
+                     this->_buffer.data(),
+                     addend._buffer.data());
     return *this;
   }
   

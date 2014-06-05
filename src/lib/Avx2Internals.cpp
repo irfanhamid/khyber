@@ -22,8 +22,8 @@ namespace khyber
   {
     void InternalAdd(size_t size,
                      sp_t* sum,
-                     sp_t* addend0,
-                     sp_t* addend1)
+                     const sp_t* addend0,
+                     const sp_t* addend1)
     {
       __m256* pSum = (__m256*)sum;
       __m256* pAddend0 = (__m256*)addend0;
@@ -34,10 +34,16 @@ namespace khyber
       }
     }
 
-    void InternalAddAcc(size_t size,
+    /*void InternalAddAcc(size_t size,
                         sp_t* acc,
                         sp_t* addend)
     {
-    }
+      __m256* pSum = (__m256*)acc;
+      __m256* pAddend = (__m256*)addend;
+
+      for ( size_t i = 0; i < (size >> 3); ++i ) {
+        pSum[i] = _mm256_add_ps(pSum[i], pAddend[i]);
+      }
+    }*/
   }
 }

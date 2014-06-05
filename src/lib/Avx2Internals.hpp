@@ -28,16 +28,16 @@ namespace khyber
     ///
     void InternalAdd(size_t size,
                      sp_t* sum,
-                     sp_t* addend0,
-                     sp_t* addend1);
+                     const sp_t* addend0,
+                     const sp_t* addend1);
     
     ///
     /// Using Intel64 AVX2 instructions:
     /// Add the single-precision floating point array addend of size elements into acc
     /// acc[0:size-1] = acc[0:size-1 + addend[0:size-1]
     ///
-    void InternalAddAcc(size_t size,
-                        sp_t* acc,
-                        sp_t* addend);
+    /// void InternalAddAcc(size_t size,
+    ///                    sp_t* acc,
+    ///                    sp_t* addend);
   }
 }

@@ -45,5 +45,9 @@ namespace khyber
                      sp_t* quotient,
                      const sp_t* dividend,
                      const sp_t* divisor);
+
+    void InternalSqrt(size_t size,
+                      sp_t* dst,
+                      sp_t* src);
   }
 }

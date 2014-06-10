@@ -1,4 +1,4 @@
-SUBDIRS = examples/cpuid src/lib src/unittest
+SUBDIRS = examples/cpuid src/lib src/unittest benchmarks/sqrt
 
 .PHONY: subdirs $(SUBDIRS)
 

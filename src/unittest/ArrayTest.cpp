@@ -54,11 +54,11 @@ BOOST_AUTO_TEST_CASE(TestArrayConstructors)
 BOOST_AUTO_TEST_CASE(TestArrayAdd)
 {
   khyber::SinglePrecisionArray arr0(512);
-  for ( int i = 0; i < 512; ++i )
+  for ( size_t i = 0; i < 512; ++i )
     arr0[i] = i;
   
   khyber::SinglePrecisionArray arr1(arr0);
-  for ( int i = 0; i < 512; ++i )
+  for ( size_t i = 0; i < 512; ++i )
     arr1[i] *= 2;
   khyber::SinglePrecisionArray sum;
   sum = arr0.Add(arr1);
@@ -68,6 +68,26 @@ BOOST_AUTO_TEST_CASE(TestArrayAdd)
       break;
     }
   }
+
+  // Lets also test an array size not a multiple of 8
+  khyber::SinglePrecisionArray arr2(13);
+  khyber::SinglePrecisionArray arr3(arr2);
+  for ( size_t i = 0; i < 13; ++i ) {
+    arr2[i] = 10 * i;
+    arr3[i] = 20 * i;
+  }
+  sum = arr2.Add(arr3);
+  for ( size_t i = 0; i < 13; ++i ) {
+    if ( sum[i] != (arr2[i] + arr3[i]) ) {
+      BOOST_CHECK_MESSAGE(false, i);
+      break;
+    }
+  }
+}
+
+BOOST_AUTO_TEST_CASE(TestArraySqrt)
+{
+  khyber::SinglePrecisionArray arr0(512);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

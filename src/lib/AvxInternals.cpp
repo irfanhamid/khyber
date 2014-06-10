@@ -14,6 +14,7 @@
 
 #include <emmintrin.h>
 #include <immintrin.h>
+#include <cmath>
 #include "AvxInternals.hpp"
 
 namespace khyber
@@ -53,6 +54,24 @@ namespace khyber
                      const sp_t* dividend,
                      const sp_t* divisor)
     {
+    }
+
+    void InternalSqrt(size_t size,
+                      sp_t* dst,
+                      sp_t* src)
+    {
+      __m256* pDst = (__m256*)dst;
+      __m256* pSrc = (__m256*)src;
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        pDst[i] = _mm256_sqrt_ps(pSrc[i]);
+      }
+
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        dst[i] = sqrt(src[i]);
+      }
     }
   }
 }

@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <cmath>
 #include "SimdContainer.hpp"
 
 namespace khyber
@@ -122,15 +123,38 @@ namespace khyber
     Array<T> Add(const Array<T>& addend) const;
     
     ///
-    /// Add contents of addend into "this" and return it.
+    /// \brief AddAcc Add contents of addend into "this" and return it.
+    /// \param addend Array to add to 'this'
+    /// \return 'this'
     ///
     Array<T>& AddAcc(const Array<T>& addend);
-    
+
+    ///
+    /// \brief Sqrt computes the square root of each element in this array and returns it in a new array of the same dimension
+    /// \return Array<T> containing the element-wise square roots of this array's buffer
+    ///
+    Array<T> Sqrt();
+
+    ///
+    /// \brief SqrtAcc replaces each entry in this Array's buffer with its square root
+    /// \return this
+    ///
+    Array<T>& SqrtAcc();
+
+    ///
+    /// \brief CrossProduct computes the dot product between multiplicand and 'this' vectors, size of multiplicand must be the same as size of 'this'
+    /// \param multiplicand
+    /// \return scalar dot product
+    ///
+    T DotProduct(const Array<T>& multiplicand) const;
+
   protected:
     // The following two function pointers are bound to one of the *<op>Impl( ) member functions
     // below based on the ProcessorCaps object which determines the CPU's capabilities
     Array<T> (Array<T>::*AddImpl) (const Array<T>&) const;
     Array<T>& (Array<T>::*AddAccImpl) (const Array<T>&);
+    Array<T> (Array<T>::*SqrtImpl) ();
+    Array<T>& (Array<T>::*SqrtAccImpl) ();
     void BuildArchBinding();
     
     Array<T> Avx2AddImpl(const Array<T>& addend) const;
@@ -138,6 +162,12 @@ namespace khyber
     
     Array<T> AvxAddImpl(const Array<T>& addend) const;
     Array<T>& AvxAddAccImpl(const Array<T>& addend);
+
+    Array<T> AvxSqrtImpl();
+    Array<T>& AvxSqrtAccImpl();
+
+    Array<T> Avx2SqrtImpl();
+    Array<T>& Avx2SqrtAccImpl();
     
     Array<T> BaseAddImpl(const Array<T>& addend) const
     {
@@ -152,6 +182,23 @@ namespace khyber
     {
       for ( size_t i = 0; i < this->_buffer.size(); ++i )
         this->_buffer[i] += addend._buffer[i];
+
+      return *this;
+    }
+
+    Array<T> BaseSqrtImpl()
+    {
+      Array<T> res(this->_buffer.size());
+      for ( size_t i = 0; i < this->_buffer.size(); ++i )
+        res[i] = sqrt(this->_buffer[i]);
+
+      return std::move(res);
+    }
+
+    Array<T>& BaseSqrtAccImpl()
+    {
+      for ( size_t i = 0; i < this->_buffer.size(); ++i )
+        this->_buffer[i] = sqrt(this->_buffer[i]);
 
       return *this;
     }

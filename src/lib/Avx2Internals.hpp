@@ -22,28 +22,73 @@ namespace khyber
   namespace avx2
   {
     ///
-    /// Using Intel64 AVX2 instructions:
-    /// Add the two single-precision floating point arrays addend0 and addend1 of size elements into sum
-    /// sum[0:size-1] = addend0[0:size-1] + addend1[0:size-1]
+    /// \brief InternalAdd add the two single-precision floating point arrays augend and addend into sum using AVX2 instructions
+    /// \param size the number of elements in all three array parameters
+    /// \param sum
+    /// \param augend
+    /// \param addend
     ///
     void InternalAdd(size_t size,
                      sp_t* sum,
                      const sp_t* augend,
                      const sp_t* addend);
 
+    ///
+    /// \brief InternalSub subtract the single-precision array subtrahend from minuend and store the result in difference using AVX2 instructions
+    /// \param size the number of elements in all three array parameters
+    /// \param difference
+    /// \param minuend
+    /// \param subtrahend
+    ///
     void InternalSub(size_t size,
                      sp_t* difference,
                      const sp_t* minuend,
                      const sp_t* subtrahend);
 
+    ///
+    /// \brief InternalMul multiply the single-precision arrays multiplicand and multiplier and store the result in product. This can be considered the classical cross product of two vectors
+    /// \param size the number of elements in all three array parameters
+    /// \param product
+    /// \param multiplicand
+    /// \param multiplier
+    ///
     void InternalMul(size_t size,
                      sp_t* product,
                      const sp_t* multiplicand,
                      const sp_t* multiplier);
 
+    ///
+    /// \brief InternalDiv
+    /// \param size the number of elements in all three array parameters
+    /// \param quotient
+    /// \param dividend
+    /// \param divisor
+    ///
     void InternalDiv(size_t size,
                      sp_t* quotient,
                      const sp_t* dividend,
                      const sp_t* divisor);
+
+    ///
+    /// \brief InternalSqrt compute the square root of every element in the single-precision array src and store the results in dst
+    /// \param size the number of elements in both array parameters
+    /// \param dst
+    /// \param src
+    ///
+    void InternalSqrt(size_t size,
+                      sp_t* dst,
+                      sp_t* src);
+
+    ///
+    /// \brief InternalDotProduct compute the dot product of the single-precision arrays multiplicand and multiplier, store in product
+    /// \param size the number of elements in both array parameters
+    /// \param product pointer to a scalar single-precision parameter
+    /// \param multiplicand
+    /// \param multiplier
+    ///
+    void InternalDotProduct(size_t size,
+                            sp_t* product,
+                            const sp_t* multiplier,
+                            const sp_t* multiplicand);
   }
 }

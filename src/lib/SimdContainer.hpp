@@ -29,6 +29,7 @@ namespace khyber
   {
   public:
     typedef T value_type;
+    typedef std::vector<T, SimdAllocator<T, DEFAULT_ALIGNMENT>> vector_type;
     
     ///
     /// Construct a container of default size
@@ -118,9 +119,17 @@ namespace khyber
     {
       return _buffer.data();
     }
-    
+
+    ///
+    /// Take the given buffer as this container's underlying buffer, it will be deleted when this container is destroyed
+    ///
+    void Swap(vector_type& buffer)
+    {
+      _buffer.swap(buffer);
+    }
+
   protected:
     ProcessorCaps _procCaps;
-    std::vector<T, SimdAllocator<T, DEFAULT_ALIGNMENT>> _buffer;
+    vector_type _buffer;
   };
 }

@@ -3,7 +3,8 @@ CC=g++
 OBJS=KhyberTest.o \
 	SimdContainerTest.o \
 	AvxInternalsTest.o \
-  ArrayTest.o \
+	Avx2InternalsTest.o \
+	ArrayTest.o \
 
 LIBS=-lboost_unit_test_framework \
 	-lkhyber \

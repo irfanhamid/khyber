@@ -31,26 +31,17 @@ namespace khyber
   {
     return (this->*AddAccImpl)(addend);
   }
-  
+
   template<>
-  Array<sp_t> Array<sp_t>::Avx2AddImpl(const Array<sp_t>& addend) const
+  Array<sp_t> Array<sp_t>::Sqrt()
   {
-    Array<sp_t> sum(this->_buffer.size());
-    avx2::InternalAdd(this->_buffer.size(),
-                      sum._buffer.data(),
-                      this->_buffer.data(),
-                      addend._buffer.data());
-    return std::move(sum);
+    return (this->*SqrtImpl)();
   }
-  
+
   template<>
-  Array<sp_t>& Array<sp_t>::Avx2AddAccImpl(const Array<sp_t>& addend)
+  Array<sp_t>& Array<sp_t>::SqrtAcc()
   {
-    avx2::InternalAdd(this->_buffer.size(),
-                      this->_buffer.data(),
-                      this->_buffer.data(),
-                      addend._buffer.data());
-    return *this;
+    return (this->*SqrtAccImpl)();
   }
   
   template<>
@@ -73,6 +64,65 @@ namespace khyber
                      addend._buffer.data());
     return *this;
   }
+
+  template<>
+  Array<sp_t> Array<sp_t>::Avx2AddImpl(const Array<sp_t>& addend) const
+  {
+    Array<sp_t> sum(this->_buffer.size());
+    avx2::InternalAdd(this->_buffer.size(),
+                      sum._buffer.data(),
+                      this->_buffer.data(),
+                      addend._buffer.data());
+    return std::move(sum);
+  }
+
+  template<>
+  Array<sp_t>& Array<sp_t>::Avx2AddAccImpl(const Array<sp_t>& addend)
+  {
+    avx2::InternalAdd(this->_buffer.size(),
+                      this->_buffer.data(),
+                      this->_buffer.data(),
+                      addend._buffer.data());
+    return *this;
+  }
+
+  template<>
+  Array<sp_t> Array<sp_t>::AvxSqrtImpl()
+  {
+    Array<sp_t> result(this->_buffer.size());
+    avx::InternalSqrt(this->_buffer.size(),
+                       result._buffer.data(),
+                       this->_buffer.data());
+    return std::move(result);
+  }
+
+  template<>
+  Array<sp_t>& Array<sp_t>::AvxSqrtAccImpl()
+  {
+    avx::InternalSqrt(this->_buffer.size(),
+                       this->_buffer.data(),
+                       this->_buffer.data());
+    return *this;
+  }
+
+  template<>
+  Array<sp_t> Array<sp_t>::Avx2SqrtImpl()
+  {
+    Array<sp_t> result(this->_buffer.size());
+    avx2::InternalSqrt(this->_buffer.size(),
+                       result._buffer.data(),
+                       this->_buffer.data());
+    return std::move(result);
+  }
+
+  template<>
+  Array<sp_t>& Array<sp_t>::Avx2SqrtAccImpl()
+  {
+    avx2::InternalSqrt(this->_buffer.size(),
+                       this->_buffer.data(),
+                       this->_buffer.data());
+    return *this;
+  }
   
   template<>
   void Array<sp_t>::BuildArchBinding()
@@ -80,12 +130,18 @@ namespace khyber
     if ( _procCaps.IsAvx2() ) {
       AddImpl = &Array<sp_t>::Avx2AddImpl;
       AddAccImpl = &Array<sp_t>::Avx2AddAccImpl;
+      SqrtImpl = &Array<sp_t>::Avx2SqrtImpl;
+      SqrtAccImpl = &Array<sp_t>::Avx2SqrtAccImpl;
     } else if ( _procCaps.IsAvx() ) {
       AddImpl = &Array<sp_t>::AvxAddImpl;
       AddAccImpl = &Array<sp_t>::AvxAddAccImpl;
+      SqrtImpl = &Array<sp_t>::AvxSqrtImpl;
+      SqrtAccImpl = &Array<sp_t>::AvxSqrtAccImpl;
     } else {
       AddImpl = &Array<sp_t>::BaseAddImpl;
       AddAccImpl = &Array<sp_t>::BaseAddAccImpl;
+      SqrtImpl = &Array<sp_t>::BaseSqrtImpl;
+      SqrtAccImpl = &Array<sp_t>::BaseSqrtAccImpl;
     }
   }
 }

@@ -80,15 +80,27 @@ namespace khyber
                       sp_t* src);
 
     ///
-    /// \brief InternalDotProduct compute the dot product of the single-precision arrays multiplicand and multiplier, store in product
+    /// \brief InternalDotProduct compute the dot product of the single-precision arrays multiplicand and multiplier using the FMA intrinsic, store in product
     /// \param size the number of elements in both array parameters
-    /// \param product pointer to a scalar single-precision parameter
-    /// \param multiplicand
+    /// \param product pointer to a scalar single-precision float
     /// \param multiplier
+    /// \param multiplicand
     ///
     void InternalDotProduct(size_t size,
                             sp_t* product,
                             const sp_t* multiplier,
                             const sp_t* multiplicand);
+
+    ///
+    /// \brief InternalDotProductFma compute the dot product of the single-precision arrays multiplicand and multiplier using the FMA intrinsic, store in product
+    /// \param size the number of elements in both array parameters
+    /// \param product pointer to a scalar single-precision float
+    /// \param multiplicand
+    /// \param multiplier
+    ///
+    void InternalDotProductFma(size_t size,
+                               sp_t* product,
+                               const sp_t* multiplier,
+                               const sp_t* multiplicand);
   }
 }

@@ -117,17 +117,95 @@ namespace khyber
     }
     
     ///
-    /// Add contents of "this" and addend arrays into a new array and return it.
+    /// Add contents of 'this' and addend arrays into a new array and return it
     /// Consider using AddAcc() instead.
     ///
     Array<T> Add(const Array<T>& addend) const;
+
+    ///
+    /// \brief Add add contents of augend and addend arrays into 'this' and return it
+    /// \param augend
+    /// \param addend
+    /// \return
+    ///
+    Array<T>& Add(const Array<T>& augend,
+                  const Array<T>& addend);
     
     ///
-    /// \brief AddAcc Add contents of addend into "this" and return it.
+    /// \brief AddAcc Add contents of addend into 'this' and return it
     /// \param addend Array to add to 'this'
     /// \return 'this'
     ///
     Array<T>& AddAcc(const Array<T>& addend);
+
+    ///
+    /// \brief Sub subtract the contents of subtrahend from 'this' into a new array and return it
+    /// \param subtrahend
+    /// \return 'this'
+    ///
+    Array<T> Sub(const Array<T>& subtrahend) const;
+
+    ///
+    /// \brief Sub subtract subtrahend from minuend into 'this' and return it
+    /// \param minuend
+    /// \param subtrahend
+    /// \return 'this'
+    ///
+    Array<T>& Sub(const Array<T>& minuend,
+                  const Array<T>& subtrahend);
+
+    ///
+    /// \brief SubAcc subtract the contents of subtrahend from 'this' and return it
+    /// \param subtrahend
+    /// \return 'this'
+    ///
+    Array<T>& SubAcc(const Array<T>& subtrahend);
+
+    ///
+    /// \brief Mul multiply contents of multiplier with 'this' into a new array and return it. Consider using MulAcc() or Mul(multiplier, multiplicand) instead
+    /// \param multiplier
+    /// \return
+    ///
+    Array<T> Mul(const Array<T>& multiplier) const;
+
+    ///
+    /// \brief Mul multiply the contents of multiplier and multiplicand into 'this' and return it
+    /// \param multiplier
+    /// \param multiplicand
+    /// \return 'this'
+    ///
+    Array<T>& Mul(const Array<T>& multiplier,
+                  const Array<T>& multiplicand);
+
+    ///
+    /// \brief MulAcc multiply multiplier into 'this' and return it
+    /// \param multiplier
+    /// \return 'this'
+    ///
+    Array<T>& MulAcc(const Array<T>& multiplier);
+
+    ///
+    /// \brief Div divide the contents of 'this' by divisor into a new array and return it
+    /// \param divisor
+    /// \return
+    ///
+    Array<T> Div(const Array<T>& divisor) const;
+
+    ///
+    /// \brief Div divide the contents of dividend by divisor into 'this' and return it
+    /// \param dividend
+    /// \param divisor
+    /// \return
+    ///
+    Array<T>& Div(const Array<T>& dividend,
+                  const Array<T>& divisor);
+
+    ///
+    /// \brief DivAcc divide the contents of 'this' by divisor into 'this' and return it
+    /// \param dividend
+    /// \return
+    ///
+    Array<T>& DivAcc(const Array<T>& dividend);
 
     ///
     /// \brief Sqrt computes the square root of each element in this array and returns it in a new array of the same dimension
@@ -149,27 +227,59 @@ namespace khyber
     T DotProduct(const Array<T>& multiplicand) const;
 
   protected:
-    // The following two function pointers are bound to one of the *<op>Impl( ) member functions
+    // The following function pointers are bound to one of the *<op>Impl( ) member functions
     // below based on the ProcessorCaps object which determines the CPU's capabilities
     Array<T> (Array<T>::*AddImpl) (const Array<T>&) const;
+    Array<T>& (Array<T>::*Add2Impl) (const Array<T>&, const Array<T>&);
     Array<T>& (Array<T>::*AddAccImpl) (const Array<T>&);
+    Array<T> (Array<T>::*SubImpl) (const Array<T>&) const;
+    Array<T>& (Array<T>::*Sub2Impl) (const Array<T>&, const Array<T>&);
+    Array<T>& (Array<T>::*SubAccImpl) (const Array<T>&);
+    Array<T> (Array<T>::*MulImpl) (const Array<T>&) const;
+    Array<T>& (Array<T>::*Mul2Impl) (const Array<T>&, const Array<T>&);
+    Array<T>& (Array<T>::*MulAccImpl) (const Array<T>&);
+    Array<T> (Array<T>::*DivImpl) (const Array<T>&) const;
+    Array<T>& (Array<T>::*Div2Impl) (const Array<T>&, const Array<T>&);
+    Array<T>& (Array<T>::*DivAccImpl) (const Array<T>&);
     Array<T> (Array<T>::*SqrtImpl) ();
     Array<T>& (Array<T>::*SqrtAccImpl) ();
-    void BuildArchBinding();
     
     Array<T> Avx2AddImpl(const Array<T>& addend) const;
+    Array<T>& Avx2Add2Impl(const Array<T>& augend, const Array<T>& addend);
     Array<T>& Avx2AddAccImpl(const Array<T>& addend);
-    
-    Array<T> AvxAddImpl(const Array<T>& addend) const;
-    Array<T>& AvxAddAccImpl(const Array<T>& addend);
+    Array<T> Avx2SubImpl(const Array<T>& subtrahend) const;
+    Array<T>& Avx2Sub2Impl(const Array<T>& minuend, const Array<T>& subtrahend);
+    Array<T>& Avx2SubAccImpl(const Array<T>& subtrahend);
+    Array<T> Avx2MulImpl(const Array<T>& multiplicand) const;
+    Array<T>& Avx2Mul2Impl(const Array<T>& multiplier, const Array<T>& multiplicand);
+    Array<T>& Avx2MulAccImpl(const Array<T>& multiplicand);
+    Array<T> Avx2DivImpl(const Array<T>& divisor) const;
+    Array<T>& Avx2Div2Impl(const Array<T>& dividend, const Array<T>& divisor);
+    Array<T>& Avx2DivAccImpl(const Array<T>& divisor);
+    Array<T> Avx2SqrtImpl();
+    Array<T>& Avx2SqrtAccImpl();
 
+    Array<T> AvxAddImpl(const Array<T>& addend) const;
+    Array<T>& AvxAdd2Impl(const Array<T>& augend, const Array<T>& addend);
+    Array<T>& AvxAddAccImpl(const Array<T>& addend);
+    Array<T> AvxSubImpl(const Array<T>& subtrahend) const;
+    Array<T>& AvxSub2Impl(const Array<T>& minuend, const Array<T>& subtrahend);
+    Array<T>& AvxSubAccImpl(const Array<T>& subtrahend);
+    Array<T> AvxMulImpl(const Array<T>& multiplicand) const;
+    Array<T>& AvxMul2Impl(const Array<T>& multiplier, const Array<T>& multiplicand);
+    Array<T>& AvxMulAccImpl(const Array<T>& multiplicand);
+    Array<T> AvxDivImpl(const Array<T>& divisor) const;
+    Array<T>& AvxDiv2Impl(const Array<T>& dividend, const Array<T>& divisor);
+    Array<T>& AvxDivAccImpl(const Array<T>& divisor);
     Array<T> AvxSqrtImpl();
     Array<T>& AvxSqrtAccImpl();
 
-    Array<T> Avx2SqrtImpl();
-    Array<T>& Avx2SqrtAccImpl();
-    
-    Array<T> BaseAddImpl(const Array<T>& addend) const
+    void BuildArchBinding();
+    void BuildAvxArchBinding();
+    void BuildAvx2ArchBinding();
+    void BuildFallbackArchBinding();
+
+    Array<T> FallbackAddImpl(const Array<T>& addend) const
     {
       Array<T> sum(this->_buffer.size());
       for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
@@ -178,7 +288,16 @@ namespace khyber
       return std::move(sum);
     }
 
-    Array<T>& BaseAddAccImpl(const Array<T>& addend)
+    Array<T>& FallbackAdd2Impl(const Array<T>& augend,
+                           const Array<T>& addend)
+    {
+      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
+        this->_buffer[i] = augend._buffer[i] + addend._buffer[i];
+      }
+      return *this;
+    }
+
+    Array<T>& FallbackAddAccImpl(const Array<T>& addend)
     {
       for ( size_t i = 0; i < this->_buffer.size(); ++i )
         this->_buffer[i] += addend._buffer[i];
@@ -186,7 +305,85 @@ namespace khyber
       return *this;
     }
 
-    Array<T> BaseSqrtImpl()
+    Array<T> FallbackSubImpl(const Array<T>& subtrahend) const
+    {
+      Array<T> difference(this->_buffer.size());
+      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
+        difference._buffer[i] = this->_buffer[i] - subtrahend._buffer[i];
+      }
+      return std::move(difference);
+    }
+
+    Array<T>& FallbackSub2Impl(const Array<T>& minuend,
+                           const Array<T>& subtrahend)
+    {
+      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
+        this->_buffer[i] = minuend._buffer[i] - subtrahend._buffer[i];
+      }
+      return *this;
+    }
+
+    Array<T>& FallbackSubAccImpl(const Array<T>& subtrahend)
+    {
+      for ( size_t i = 0; i < this->_buffer.size(); ++i )
+        this->_buffer[i] -= subtrahend._buffer[i];
+
+      return *this;
+    }
+
+    Array<T> FallbackMulImpl(const Array<T>& multiplicand) const
+    {
+      Array<T> product(this->_buffer.size());
+      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
+        product._buffer[i] = this->_buffer[i] * multiplicand._buffer[i];
+      }
+      return std::move(product);
+    }
+
+    Array<T>& FallbackMul2Impl(const Array<T>& multiplier,
+                           const Array<T>& multiplicand)
+    {
+      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
+        this->_buffer[i] = multiplier._buffer[i] * multiplicand._buffer[i];
+      }
+      return *this;
+    }
+
+    Array<T>& FallbackMulAccImpl(const Array<T>& multiplicand)
+    {
+      for ( size_t i = 0; i < this->_buffer.size(); ++i )
+        this->_buffer[i] *= multiplicand._buffer[i];
+
+      return *this;
+    }
+
+    Array<T> FallbackDivImpl(const Array<T>& divisor) const
+    {
+      Array<T> quotient(this->_buffer.size());
+      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
+        quotient._buffer[i] = this->_buffer[i] / divisor._buffer[i];
+      }
+      return std::move(quotient);
+    }
+
+    Array<T>& FallbackDiv2Impl(const Array<T>& dividend,
+                           const Array<T>& divisor)
+    {
+      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
+        this->_buffer[i] = dividend._buffer[i] / divisor._buffer[i];
+      }
+      return *this;
+    }
+
+    Array<T>& FallbackDivAccImpl(const Array<T>& divisor)
+    {
+      for ( size_t i = 0; i < this->_buffer.size(); ++i )
+        this->_buffer[i] /= divisor._buffer[i];
+
+      return *this;
+    }
+
+    Array<T> FallbackSqrtImpl()
     {
       Array<T> res(this->_buffer.size());
       for ( size_t i = 0; i < this->_buffer.size(); ++i )
@@ -195,7 +392,7 @@ namespace khyber
       return std::move(res);
     }
 
-    Array<T>& BaseSqrtAccImpl()
+    Array<T>& FallbackSqrtAccImpl()
     {
       for ( size_t i = 0; i < this->_buffer.size(); ++i )
         this->_buffer[i] = sqrt(this->_buffer[i]);

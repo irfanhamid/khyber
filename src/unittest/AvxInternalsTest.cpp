@@ -21,6 +21,11 @@ BOOST_AUTO_TEST_SUITE(AvxInternalsTestSuite)
 
 BOOST_AUTO_TEST_CASE(TestAvxAddSinglePrecision)
 {
+  ProcessorCaps caps;
+  if ( !caps.IsAvx() ) {
+    return;
+  }
+
   khyber::sp_t sum[TEST_VECTOR_LENGTH];
   khyber::sp_t addend0[TEST_VECTOR_LENGTH];
   khyber::sp_t addend1[TEST_VECTOR_LENGTH];

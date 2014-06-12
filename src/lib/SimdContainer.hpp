@@ -121,6 +121,14 @@ namespace khyber
     }
 
     ///
+    /// Get the underlying const buffer. Use this method with extreme care
+    ///
+    const T* GetBuffer() const
+    {
+      return _buffer.data();
+    }
+
+    ///
     /// Take the given buffer as this container's underlying buffer, it will be deleted when this container is destroyed
     ///
     void Swap(vector_type& buffer)

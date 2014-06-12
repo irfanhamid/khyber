@@ -21,6 +21,11 @@ BOOST_AUTO_TEST_SUITE(Avx2InternalsTestSuite)
 
 BOOST_AUTO_TEST_CASE(TestAvx2AddSinglePrecision)
 {
+  ProcessorCaps caps;
+  if ( !caps.IsAvx2() ) {
+    return;
+  }
+
   khyber::sp_t sum[TEST_VECTOR_LENGTH];
   khyber::sp_t addend0[TEST_VECTOR_LENGTH];
   khyber::sp_t addend1[TEST_VECTOR_LENGTH];
@@ -43,6 +48,11 @@ BOOST_AUTO_TEST_CASE(TestAvx2AddSinglePrecision)
 
 BOOST_AUTO_TEST_CASE(TestAvx2DotProductSinglePrecision)
 {
+  ProcessorCaps caps;
+  if ( !caps.IsAvx2() ) {
+    return;
+  }
+
   khyber::sp_t product;
   khyber::sp_t multiplicand[TEST_VECTOR_LENGTH];
   khyber::sp_t multiplier[TEST_VECTOR_LENGTH];

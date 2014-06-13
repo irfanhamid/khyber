@@ -101,6 +101,30 @@ namespace khyber
       }
     }
 
+    void InternalDotProduct(size_t size,
+                            sp_t *product,
+                            const sp_t *multiplier,
+                            const sp_t *multiplicand)
+    {
+      __m256* pMultiplier = (__m256*)multiplier;
+      __m256* pMultiplicand = (__m256*)multiplicand;
+      __m256 accumulator = _mm256_setzero_ps();
+      __m256 scratch;
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        scratch = _mm256_mul_ps(pMultiplier[i], pMultiplicand[i]);
+        accumulator = _mm256_add_ps(accumulator, scratch);
+      }
+
+      sp_t* tmp = (sp_t*)&accumulator;
+      *product = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        *product += (multiplier[i] * multiplicand[i]);
+      }
+    }
+
     void InternalSqrt(size_t size,
                       sp_t* dst,
                       sp_t* src)

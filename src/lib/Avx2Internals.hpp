@@ -54,8 +54,8 @@ namespace khyber
     ///
     void InternalMul(size_t size,
                      sp_t* product,
-                     const sp_t* multiplicand,
-                     const sp_t* multiplier);
+                     const sp_t* multiplier,
+                     const sp_t* multiplicand);
 
     ///
     /// \brief InternalDiv

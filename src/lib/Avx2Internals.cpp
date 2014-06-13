@@ -62,21 +62,21 @@ namespace khyber
 
     void InternalMul(size_t size,
                      sp_t* product,
-                     const sp_t* multiplicand,
-                     const sp_t* multiplier)
+                     const sp_t* multiplier,
+                     const sp_t* multiplicand)
     {
       __m256* pProduct = (__m256*)product;
-      __m256* pMultiplicand = (__m256*)multiplicand;
       __m256* pMultiplier = (__m256*)multiplier;
+      __m256* pMultiplicand = (__m256*)multiplicand;
 
       size_t i;
       for ( i = 0; i < (size >> 3); ++i ) {
-        pProduct[i] = _mm256_mul_ps(pMultiplicand[i], pMultiplier[i]);
+        pProduct[i] = _mm256_mul_ps(pMultiplier[i], pMultiplicand[i]);
       }
 
       i <<= 3;
       for ( ; i < size; ++i ) {
-        product[i] = multiplicand[i] * multiplier[i];
+        product[i] = multiplier[i] * multiplicand[i];
       }
     }
 

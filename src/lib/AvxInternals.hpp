@@ -46,6 +46,11 @@ namespace khyber
                      const sp_t* dividend,
                      const sp_t* divisor);
 
+    void InternalDotProduct(size_t size,
+                            sp_t* product,
+                            const sp_t* multiplier,
+                            const sp_t* multiplicand);
+
     void InternalSqrt(size_t size,
                       sp_t* dst,
                       sp_t* src);

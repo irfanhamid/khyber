@@ -58,7 +58,7 @@ namespace khyber
                      const sp_t* multiplicand);
 
     ///
-    /// \brief InternalDiv
+    /// \brief InternalDiv divide the single-precision array dividend by divisor and store the results in quotient
     /// \param size the number of elements in all three array parameters
     /// \param quotient
     /// \param dividend
@@ -69,6 +69,7 @@ namespace khyber
                      const sp_t* dividend,
                      const sp_t* divisor);
 
+
     ///
     /// \brief InternalSqrt compute the square root of every element in the single-precision array src and store the results in dst
     /// \param size the number of elements in both array parameters
@@ -78,6 +79,47 @@ namespace khyber
     void InternalSqrt(size_t size,
                       sp_t* dst,
                       sp_t* src);
+
+    ///
+    /// \brief InternalSquare compute the square of every element in the array src and store it in the array dst
+    /// \param size the number of elements in both array parameters
+    /// \param dst
+    /// \param src
+    ///
+    void InternalSquare(size_t size,
+                        sp_t* dst,
+                        const sp_t* src);
+
+    ///
+    /// \brief InternalCube compute the cube of every element in the array src and store it in the array dst
+    /// \param size the number of elements in both array parameters
+    /// \param dst
+    /// \param src
+    ///
+    void InternalCube(size_t size,
+                      sp_t* dst,
+                      const sp_t* src);
+
+
+    ///
+    /// \brief InternalSum compute the sum of all elements in the single-precision array src, the output is a scalar. Note this is not the prefix sum, the src array remains unchanged
+    /// \param size the number of elements in both array parameters
+    /// \param sum
+    /// \param src
+    ///
+    void InternalSum(size_t size,
+                     sp_t* sum,
+                     const sp_t* src);
+
+    ///
+    /// \brief InternalPrefixSum compute the prefix sum (each element is the cumulative sum of all elements up to and including it) of the src array and store it in dst
+    /// \param size
+    /// \param dst
+    /// \param src
+    ///
+    void InternalPrefixSum(size_t size,
+                           sp_t* dst,
+                           sp_t* src);
 
     ///
     /// \brief InternalDotProduct compute the dot product of the single-precision arrays multiplicand and multiplier using the FMA intrinsic, store in product

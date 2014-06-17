@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include <immintrin.h>
+#include <avxintrin.h>
+#include <avx2intrin.h>
 #include <cmath>
 #include "Avx2Internals.hpp"
 
@@ -115,6 +117,65 @@ namespace khyber
       i <<= 3;
       for ( ; i < size; ++i ) {
         dst[i] = sqrt(src[i]);
+      }
+    }
+
+    void InternalSquare(size_t size,
+                        sp_t *dst,
+                        const sp_t *src)
+    {
+      __m256* pDst = (__m256*)dst;
+      __m256* pSrc = (__m256*)src;
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        pDst[i] = _mm256_mul_ps(pSrc[i], pSrc[i]);
+      }
+
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        dst[i] = src[i] * src[i];
+      }
+    }
+
+    void InternalCube(size_t size,
+                      sp_t *dst,
+                      const sp_t *src)
+    {
+      __m256* pDst = (__m256*)dst;
+      __m256* pSrc = (__m256*)src;
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        pDst[i] = _mm256_mul_ps(pSrc[i], pSrc[i]);
+        pDst[i] = _mm256_mul_ps(pDst[i], pSrc[i]);
+      }
+
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        dst[i] = src[i] * src[i] * src[i];
+      }
+    }
+
+    void InternalSum(size_t size,
+                     sp_t* sum,
+                     const sp_t* src)
+    {
+      __m256 scratch;
+      __m256 accumulator = _mm256_setzero_ps();
+      const __m256* pSrc = (const __m256*)src;
+
+      size_t i;
+      for ( i = 0; i < ((size >> 3) - 1); i += 2 ) {
+        scratch = _mm256_hadd_ps(pSrc[i], pSrc[i + 1]);
+        accumulator = _mm256_add_ps(accumulator, scratch);
+      }
+
+      sp_t* tmp = (sp_t*)&accumulator;
+      *sum = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
+      i <<= 3;
+      while ( i < size ) {
+        *sum += src[i++];
       }
     }
 

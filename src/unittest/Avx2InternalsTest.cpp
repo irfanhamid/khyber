@@ -156,6 +156,60 @@ BOOST_AUTO_TEST_CASE(TestAvx2SqrtSinglePrecision)
   }
 }
 
+BOOST_AUTO_TEST_CASE(TestAvx2PowersSinglePrecision)
+{
+  ProcessorCaps caps;
+  if ( !caps.IsAvx2() ) {
+    return;
+  }
+
+  sp_t src[TEST_VECTOR_LENGTH];
+  sp_t sqr[TEST_VECTOR_LENGTH];
+  sp_t cub[TEST_VECTOR_LENGTH];
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    src[i] = i * (i % 2 ? 1 : -1);
+  }
+
+  avx2::InternalSquare(TEST_VECTOR_LENGTH,
+                       sqr,
+                       src);
+  avx2::InternalCube(TEST_VECTOR_LENGTH,
+                     cub,
+                     src);
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    if ( sqr[i] != src[i] * src[i] ) {
+      BOOST_CHECK_MESSAGE(false, i);
+      break;
+    }
+    if ( cub[i] != src[i] * src[i] * src[i] ) {
+      BOOST_CHECK_MESSAGE(false, i);
+      break;
+    }
+  }
+}
+
+BOOST_AUTO_TEST_CASE(TestAvx2ArraySum)
+{
+  ProcessorCaps caps;
+  if ( !caps.IsAvx2() ) {
+    return;
+  }
+
+  const size_t LEN = 531;
+  sp_t refVal = 0;
+  sp_t src[LEN];
+  for ( auto i = 0; i < LEN; ++i ) {
+    src[i] = i;
+    refVal += i;
+  }
+
+  sp_t sum;
+  avx2::InternalSum(LEN,
+                    &sum,
+                    src);
+  BOOST_CHECK_EQUAL(sum, refVal);
+}
+
 BOOST_AUTO_TEST_CASE(TestAvx2DotProductSinglePrecision)
 {
   ProcessorCaps caps;
@@ -178,6 +232,12 @@ BOOST_AUTO_TEST_CASE(TestAvx2DotProductSinglePrecision)
                                    &product,
                                    multiplicand,
                                    multiplier);
+  BOOST_CHECK_EQUAL(refVal, product);
+
+  avx2::InternalDotProductFma(TEST_VECTOR_LENGTH,
+                              &product,
+                              multiplicand,
+                              multiplier);
   BOOST_CHECK_EQUAL(refVal, product);
 }
 

@@ -57,16 +57,17 @@ __asm__ __volatile__ ("cpuid":          \
 #define BM_30 0x40000000
 #define BM_31 0x80000000
 
-#define BM_MMX    BM_00
-#define BM_SSE    BM_01
-#define BM_SSE2   BM_02
-#define BM_SSE3   BM_03
-#define BM_SSE4_1 BM_04
-#define BM_SSE4_2 BM_05
-#define BM_AVX    BM_06
-#define BM_AVX2   BM_07
-#define BM_FMA    BM_08
-#define BM_HTT    BM_09
+#define BM_MMX     BM_00
+#define BM_SSE     BM_01
+#define BM_SSE2    BM_02
+#define BM_SSE3    BM_03
+#define BM_SSE4_1  BM_04
+#define BM_SSE4_2  BM_05
+#define BM_AVX     BM_06
+#define BM_AVX2    BM_07
+#define BM_FMA     BM_08
+#define BM_HTT     BM_09
+#define BM_AVX512F BM_10
 
 #define capset(flag, reg, input_mask, output_mask) flag |= ((reg & BM_##input_mask) ? BM_##output_mask : BM_NO)
 
@@ -110,11 +111,12 @@ namespace khyber
         ecx = 0;
         cpuid(7, eax, ebx, ecx, edx);
         capset(_flags, ebx, 05, AVX2);
+        capset(_flags, ebx, 16, AVX512F);
       }
     }
     
     ///
-    /// Returns true if Hyperthreading Technology is present
+    /// \brief Returns true if Hyperthreading Technology is present
     ///
     inline bool IsHtt() const
     {
@@ -122,7 +124,7 @@ namespace khyber
     }
     
     ///
-    /// Returns true if MMX technology is present
+    /// \brief Returns true if MMX technology is present
     ///
     inline bool IsMmx() const
     {
@@ -130,7 +132,7 @@ namespace khyber
     }
     
     ///
-    /// Returns true if SSE technology is present
+    /// \brief Returns true if SSE technology is present
     ///
     inline bool IsSse() const
     {
@@ -138,7 +140,7 @@ namespace khyber
     }
     
     ///
-    /// Returns true if SSE2 technology is present
+    /// \brief Returns true if SSE2 technology is present
     ///
     inline bool IsSse2() const
     {
@@ -146,7 +148,7 @@ namespace khyber
     }
     
     ///
-    /// Returns true if SSE3 technology is present
+    /// \brief Returns true if SSE3 technology is present
     ///
     inline bool IsSse3() const
     {
@@ -154,7 +156,7 @@ namespace khyber
     }
     
     ///
-    /// Returns true if SSE4.1 technology is present
+    /// \brief Returns true if SSE4.1 technology is present
     ///
     inline bool IsSse4_1() const
     {
@@ -162,7 +164,7 @@ namespace khyber
     }
     
     ///
-    /// Returns true if SSE4.2 technology is present
+    /// \brief Returns true if SSE4.2 technology is present
     ///
     inline bool IsSse4_2() const
     {
@@ -170,7 +172,7 @@ namespace khyber
     }
     
     ///
-    /// Returns true if AVX technology is present
+    /// \brief Returns true if AVX technology is present
     ///
     inline bool IsAvx() const
     {
@@ -178,15 +180,23 @@ namespace khyber
     }
     
     ///
-    /// Returns true if AVX2 technology is present
+    /// \brief Returns true if AVX2 technology is present
     ///
     inline bool IsAvx2() const
     {
       return _flags & BM_AVX2;
     }
+
+    ///
+    /// \brief IsAvx512F Returns true if AVX512F technology is present
+    ///
+    inline bool IsAvx512F() const
+    {
+      return _flags & BM_AVX512F;
+    }
     
     ///
-    /// Returns true if the FMA instruction is present
+    /// \brief Returns true if the FMA instruction is present
     ///
     inline bool IsFma() const
     {
@@ -194,7 +204,7 @@ namespace khyber
     }
     
     ///
-    /// Returns an std::string with formatted capability description
+    /// \brief Returns an std::string with formatted capability description
     ///
     inline std::string GetCapsDescription() const
     {
@@ -208,6 +218,7 @@ namespace khyber
       capsStream << "SSE4.2\t" << (IsSse4_2() ? "yes" : "no") << std::endl;
       capsStream << "AVX\t" << (IsAvx() ? "yes" : "no") << std::endl;
       capsStream << "AVX2\t" << (IsAvx2() ? "yes" : "no") << std::endl;
+      capsStream << "AVX512F\t" << (IsAvx512F() ? "yes" : "no") << std::endl;
       capsStream << "FMA\t" << (IsFma() ? "yes" : "no") << std::endl;
       
       return capsStream.str();
@@ -221,9 +232,9 @@ namespace khyber
   private:
 
     // Flag register layout:
-    // --------------------------------------------------------------------
-    // HTT | FMA | AVX2 | AVX | SSE4.2 | SSE4.1 | SSE3 | SSE2 | SSE | MMX |
-    // --------------------------------------------------------------------
+    // -------------------------------------------------------------------------------
+    // | AVX512 | HTT | FMA | AVX2 | AVX | SSE4.2 | SSE4.1 | SSE3 | SSE2 | SSE | MMX |
+    // -------------------------------------------------------------------------------
     uint64_t _flags;
   };
 }

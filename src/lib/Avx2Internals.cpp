@@ -24,7 +24,7 @@ namespace khyber
   {
     void InternalAdd(size_t size,
                      sp_t* sum,
-                     const sp_t* augend,
+                     sp_t* augend,
                      const sp_t* addend)
     {
       __m256* pSum = (__m256*)sum;
@@ -44,7 +44,7 @@ namespace khyber
 
     void InternalSub(size_t size,
                      sp_t* difference,
-                     const sp_t* minuend,
+                     sp_t* minuend,
                      const sp_t* subtrahend)
     {
       __m256* pDifference = (__m256*)difference;
@@ -64,7 +64,7 @@ namespace khyber
 
     void InternalMul(size_t size,
                      sp_t* product,
-                     const sp_t* multiplier,
+                     sp_t* multiplier,
                      const sp_t* multiplicand)
     {
       __m256* pProduct = (__m256*)product;
@@ -84,7 +84,7 @@ namespace khyber
 
     void InternalDiv(size_t size,
                      sp_t* quotient,
-                     const sp_t* dividend,
+                     sp_t* dividend,
                      const sp_t* divisor)
     {
       __m256* pQuotient = (__m256*)quotient;
@@ -122,7 +122,7 @@ namespace khyber
 
     void InternalSquare(size_t size,
                         sp_t *dst,
-                        const sp_t *src)
+                        sp_t *src)
     {
       __m256* pDst = (__m256*)dst;
       __m256* pSrc = (__m256*)src;
@@ -140,7 +140,7 @@ namespace khyber
 
     void InternalCube(size_t size,
                       sp_t *dst,
-                      const sp_t *src)
+                      sp_t *src)
     {
       __m256* pDst = (__m256*)dst;
       __m256* pSrc = (__m256*)src;

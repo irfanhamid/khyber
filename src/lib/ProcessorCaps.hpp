@@ -18,6 +18,7 @@
 #include <string>
 #include <sstream>
 #include <cstdint>
+#include "Types.hpp"
   
 #define cpuid(func, eax, ebx, ecx, edx) \
 __asm__ __volatile__ ("cpuid":          \
@@ -88,9 +89,21 @@ namespace khyber
 
       cpuid(0, eax, ebx, ecx, edx);
       HighestFunction = eax;
-      
+      ui32_t* brandPtr = (ui32_t*)_brand;
+      brandPtr[0] = ebx;
+      brandPtr[1] = edx;
+      brandPtr[2] = ecx;
+      _brand[12] = '\0';
+
       cpuid(0x8000, eax, ebx, ecx, edx);
       HighestExtFunction = eax;
+
+      if ( HighestFunction >= 4 ) {
+        // Now we query the caches
+        eax = 4;
+        ecx = 0;
+        cpuid(0x0004, eax, ebx, ecx, edx);
+      }
       
       if ( HighestFunction >= 1 ) {
         cpuid(1, eax, ebx, ecx, edx);
@@ -115,6 +128,11 @@ namespace khyber
       }
     }
     
+    inline const char* BrandString() const
+    {
+      return _brand;
+    }
+
     ///
     /// \brief Returns true if Hyperthreading Technology is present
     ///
@@ -209,6 +227,7 @@ namespace khyber
     inline std::string GetCapsDescription() const
     {
       std::ostringstream capsStream;
+      capsStream << BrandString() << "\t" << std::endl;
       capsStream << "HTT\t" << (IsHtt() ? "yes" : "no") << std::endl;
       capsStream << "MMX\t" << (IsMmx() ? "yes" : "no") << std::endl;
       capsStream << "SSE\t" << (IsSse() ? "yes" : "no") << std::endl;
@@ -236,5 +255,6 @@ namespace khyber
     // | AVX512 | HTT | FMA | AVX2 | AVX | SSE4.2 | SSE4.1 | SSE3 | SSE2 | SSE | MMX |
     // -------------------------------------------------------------------------------
     uint64_t _flags;
+    char _brand[16];
   };
 }

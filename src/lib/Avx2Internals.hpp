@@ -30,7 +30,7 @@ namespace khyber
     ///
     void InternalAdd(size_t size,
                      sp_t* sum,
-                     const sp_t* augend,
+                     sp_t* augend,
                      const sp_t* addend);
 
     ///
@@ -42,7 +42,7 @@ namespace khyber
     ///
     void InternalSub(size_t size,
                      sp_t* difference,
-                     const sp_t* minuend,
+                     sp_t* minuend,
                      const sp_t* subtrahend);
 
     ///
@@ -54,7 +54,7 @@ namespace khyber
     ///
     void InternalMul(size_t size,
                      sp_t* product,
-                     const sp_t* multiplier,
+                     sp_t* multiplier,
                      const sp_t* multiplicand);
 
     ///
@@ -66,7 +66,7 @@ namespace khyber
     ///
     void InternalDiv(size_t size,
                      sp_t* quotient,
-                     const sp_t* dividend,
+                     sp_t* dividend,
                      const sp_t* divisor);
 
 
@@ -88,7 +88,7 @@ namespace khyber
     ///
     void InternalSquare(size_t size,
                         sp_t* dst,
-                        const sp_t* src);
+                        sp_t* src);
 
     ///
     /// \brief InternalCube compute the cube of every element in the array src and store it in the array dst
@@ -98,7 +98,7 @@ namespace khyber
     ///
     void InternalCube(size_t size,
                       sp_t* dst,
-                      const sp_t* src);
+                      sp_t* src);
 
 
     ///

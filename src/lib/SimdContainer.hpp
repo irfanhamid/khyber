@@ -28,11 +28,13 @@ namespace khyber
   class SimdContainer
   {
   public:
-    typedef T value_type;
+    ///
+    /// \brief vector_type the underlying buffer's type, i.e., std::vector<T, ...>
+    ///
     typedef std::vector<T, SimdAllocator<T, DEFAULT_ALIGNMENT>> vector_type;
     
     ///
-    /// Construct a container of default size
+    /// \brief SimdContainer Construct a container of default size
     ///
     SimdContainer()
     {
@@ -40,7 +42,8 @@ namespace khyber
     }
 
     ///
-    /// Construct a container of specified size
+    /// \brief SimdContainer Construct a container of specified size
+    /// \param capacity the initial capacity of the container
     ///
     SimdContainer(size_t capacity)
     {
@@ -48,7 +51,8 @@ namespace khyber
     }
     
     ///
-    /// Const copy constructor
+    /// \brief SimdContainer const copy constructor
+    /// \param rhs the SimdContainer<T> to copy from
     ///
     SimdContainer(const SimdContainer<T>& rhs)
     {
@@ -56,82 +60,103 @@ namespace khyber
     }
     
     ///
-    /// Copy constructor
+    /// \brief SimdContainer non-const copy constructor
+    /// \param rhs the SimdContainer<T> to copy from
     ///
     SimdContainer(SimdContainer<T>& rhs)
     {
       _buffer.assign(rhs._buffer.begin(), rhs._buffer.end());
     }
-    
+
     ///
-    /// Move constructor
+    /// \brief SimdContainer non-const move constructor
+    /// \param rhs the SimdContainer<T> to pilfer from
     ///
     SimdContainer(SimdContainer<T>&& rhs) : _buffer(std::move(rhs._buffer))
     {
     }
     
     ///
-    /// Move assignment operator
+    /// \brief operator = move assignment operator
+    /// \param rhs the SimdContainer<T> to pilfer from
+    /// \return 'this'
     ///
     SimdContainer<T>& operator = (SimdContainer<T>&& rhs)
     {
       _buffer = std::move(rhs._buffer);
       return *this;
     }
-    
+
     ///
-    /// Copy assignment operator
+    /// \brief operator = copy assignment operator
+    /// \param rhs the SimdContainer<T> to copy from
+    /// \return 'this'
     ///
     SimdContainer<T>& operator = (SimdContainer<T>& rhs)
     {
       _buffer.assign(rhs._buffer.begin(), rhs._buffer.end());
       return *this;
     }
-    
+
     ///
-    /// Returns the total size of the underlying container
+    /// \brief push_back Adds a new element at the end of the vector, after its current last element. The content of val is copied (or moved) to the new element
+    /// \param val Value to be copied (or moved) to the new element
     ///
-    size_t Size() const
+    void push_back(const T& val)
+    {
+      _buffer.push_back(val);
+    }
+
+    ///
+    /// \brief push_back Adds a new element at the end of the vector, after its current last element. The content of val is copied (or moved) to the new element
+    /// \param val Value to be copied (or moved) to the new element
+    ///
+    void push_back(T&& val)
+    {
+      _buffer.push_back(val);
+    }
+
+    ///
+    /// \brief size returns the number of elements of type T in the underlying memory buffer
+    /// \return number of elements
+    ///
+    size_t size() const
     {
       return _buffer.size();
     }
 
     ///
-    /// Returns the capacity of the underlying container
+    /// \brief capacity the capacity of the underlying memory buffer
+    /// \return capacity
     ///
-    size_t Capacity() const
+    size_t capacity() const
     {
       return _buffer.capacity();
     }
-             
-    ///
-    /// Returns the total size of the underlying container in bytes
-    ///
-    size_t SizeInBytes() const
-    {
-      return _buffer.size() * sizeof(T);
-    }
     
     ///
-    /// Get the underlying buffer. Use this method with extreme care
+    /// \brief data return the mutable pointer to the start of the underlying memory buffer, use with extreme care
+    /// \return non-const pointer to data
     ///
-    T* GetBuffer()
+    T* data()
     {
       return _buffer.data();
     }
 
     ///
-    /// Get the underlying const buffer. Use this method with extreme care
+    /// \brief data return the const pointer to the start of the underlying memory buffer, use with extreme care
+    /// \return const pointer to data
     ///
-    const T* GetBuffer() const
+    const T* data() const
     {
       return _buffer.data();
     }
 
     ///
-    /// Take the given buffer as this container's underlying buffer, it will be deleted when this container is destroyed
+    /// \brief swap take the given buffer as this container's underlying buffer, it will be deleted when this container is destroyed
+    /// \param buffer the SimdContainer<T> whose contents to take
     ///
-    void Swap(vector_type& buffer)
+    void swap(vector_type& buffer)
     {
       _buffer.swap(buffer);
     }

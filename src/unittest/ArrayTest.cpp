@@ -20,35 +20,33 @@ BOOST_AUTO_TEST_SUITE(ArrayTestSuite)
 khyber::SinglePrecisionArray MakeArray(khyber::sp_t** pBuffer)
 {
   khyber::SinglePrecisionArray tmp;
-  *pBuffer = tmp.GetBuffer();
+  *pBuffer = tmp.data();
   return tmp;
 }
 
 BOOST_AUTO_TEST_CASE(TestArrayConstructors)
 {
   khyber::SinglePrecisionArray arr0(512);
-  BOOST_CHECK_EQUAL(arr0.Size(), 512);
-  BOOST_CHECK_EQUAL(arr0.SizeInBytes(), 512 * sizeof(float));
-  BOOST_CHECK_EQUAL((uint64_t)arr0.GetBuffer() % 32, 0);
+  BOOST_CHECK_EQUAL(arr0.size(), 512);
+  BOOST_CHECK_EQUAL((uint64_t)arr0.data() % 32, 0);
   
   for ( int i = 0; i < 512; ++i )
     arr0[i] = i;
   
   khyber::SinglePrecisionArray arr1(arr0);
-  BOOST_CHECK_EQUAL(arr1.Size(), 512);
-  BOOST_CHECK_EQUAL(arr1.SizeInBytes(), 512 * sizeof(float));
-  BOOST_CHECK_EQUAL((uint64_t)arr1.GetBuffer() % 32, 0);
-  BOOST_CHECK_NE(arr0.GetBuffer(), arr1.GetBuffer());
+  BOOST_CHECK_EQUAL(arr1.size(), 512);
+  BOOST_CHECK_EQUAL((uint64_t)arr1.data() % 32, 0);
+  BOOST_CHECK_NE(arr0.data(), arr1.data());
   for ( int i = 0; i < 512; ++i )
     BOOST_CHECK_EQUAL(arr0.At(i), arr1.At(i));
   
   khyber::sp_t* pBuffer = nullptr;
   khyber::SinglePrecisionArray arr2(MakeArray(&pBuffer));
-  BOOST_CHECK_EQUAL(arr2.GetBuffer(), pBuffer);
+  BOOST_CHECK_EQUAL(arr2.data(), pBuffer);
   arr2 = arr1;
-  BOOST_CHECK_NE(arr1.GetBuffer(), arr2.GetBuffer());
+  BOOST_CHECK_NE(arr1.data(), arr2.data());
   arr2 = MakeArray(&pBuffer);
-  BOOST_CHECK_EQUAL(arr2.GetBuffer(), pBuffer);
+  BOOST_CHECK_EQUAL(arr2.data(), pBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(TestArrayAdd)

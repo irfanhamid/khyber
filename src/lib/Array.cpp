@@ -123,21 +123,21 @@ namespace khyber
   Array<sp_t>& Array<sp_t>::AvxSub2Impl(Array<sp_t>& minuend,
                                         const Array<sp_t>& subtrahend)
   {
-    avx::InternalSub(this->Size(),
-                     this->GetBuffer(),
-                     minuend.GetBuffer(),
-                     subtrahend.GetBuffer());
+    avx::InternalSub(this->size(),
+                     this->data(),
+                     minuend.data(),
+                     subtrahend.data());
     return *this;
   }
 
   template<>
   Array<sp_t> Array<sp_t>::AvxMulImpl(const Array<sp_t> &multiplier)
   {
-    Array<sp_t> product(this->Size());
-    avx::InternalMul(this->Size(),
-                     product.GetBuffer(),
-                     this->GetBuffer(),
-                     multiplier.GetBuffer());
+    Array<sp_t> product(this->size());
+    avx::InternalMul(this->size(),
+                     product.data(),
+                     this->data(),
+                     multiplier.data());
     return std::move(product);
   }
 
@@ -145,21 +145,21 @@ namespace khyber
   Array<sp_t>& Array<sp_t>::AvxMul2Impl(Array<sp_t> &multiplier,
                                         const Array<sp_t> &multiplicand)
   {
-    avx::InternalMul(this->Size(),
-                     this->GetBuffer(),
-                     multiplier.GetBuffer(),
-                     multiplicand.GetBuffer());
+    avx::InternalMul(this->size(),
+                     this->data(),
+                     multiplier.data(),
+                     multiplicand.data());
     return *this;
   }
 
   template<>
   Array<sp_t> Array<sp_t>::AvxDivImpl(const Array<sp_t> &divisor)
   {
-    Array<sp_t> quotient(divisor.Size());
-    avx::InternalDiv(this->Size(),
-                     quotient.GetBuffer(),
-                     this->GetBuffer(),
-                     divisor.GetBuffer());
+    Array<sp_t> quotient(divisor.size());
+    avx::InternalDiv(this->size(),
+                     quotient.data(),
+                     this->data(),
+                     divisor.data());
     return std::move(quotient);
   }
 
@@ -167,10 +167,10 @@ namespace khyber
   Array<sp_t>& Array<sp_t>::AvxDiv2Impl(Array<sp_t> &dividend,
                                         const Array<sp_t> &divisor)
   {
-    avx::InternalDiv(this->Size(),
-                     this->GetBuffer(),
-                     dividend.GetBuffer(),
-                     divisor.GetBuffer());
+    avx::InternalDiv(this->size(),
+                     this->data(),
+                     dividend.data(),
+                     divisor.data());
     return *this;
   }
 
@@ -228,21 +228,21 @@ namespace khyber
   Array<sp_t>& Array<sp_t>::Avx2Sub2Impl(Array<sp_t>& minuend,
                                          const Array<sp_t>& subtrahend)
   {
-    avx2::InternalSub(this->Size(),
-                      this->GetBuffer(),
-                      minuend.GetBuffer(),
-                      subtrahend.GetBuffer());
+    avx2::InternalSub(this->size(),
+                      this->data(),
+                      minuend.data(),
+                      subtrahend.data());
     return *this;
   }
 
   template<>
   Array<sp_t> Array<sp_t>::Avx2MulImpl(const Array<sp_t> &multiplier)
   {
-    Array<sp_t> product(this->Size());
-    avx2::InternalMul(this->Size(),
-                      product.GetBuffer(),
-                      this->GetBuffer(),
-                      multiplier.GetBuffer());
+    Array<sp_t> product(this->size());
+    avx2::InternalMul(this->size(),
+                      product.data(),
+                      this->data(),
+                      multiplier.data());
     return std::move(product);
   }
 
@@ -250,21 +250,21 @@ namespace khyber
   Array<sp_t>& Array<sp_t>::Avx2Mul2Impl(Array<sp_t> &multiplier,
                                          const Array<sp_t> &multiplicand)
   {
-    avx2::InternalMul(this->Size(),
-                      this->GetBuffer(),
-                      multiplier.GetBuffer(),
-                      multiplicand.GetBuffer());
+    avx2::InternalMul(this->size(),
+                      this->data(),
+                      multiplier.data(),
+                      multiplicand.data());
     return *this;
   }
 
   template<>
   Array<sp_t> Array<sp_t>::Avx2DivImpl(const Array<sp_t> &divisor)
   {
-    Array<sp_t> quotient(divisor.Size());
-    avx2::InternalDiv(this->Size(),
-                      quotient.GetBuffer(),
-                      this->GetBuffer(),
-                      divisor.GetBuffer());
+    Array<sp_t> quotient(divisor.size());
+    avx2::InternalDiv(this->size(),
+                      quotient.data(),
+                      this->data(),
+                      divisor.data());
     return std::move(quotient);
   }
 
@@ -272,10 +272,10 @@ namespace khyber
   Array<sp_t>& Array<sp_t>::Avx2Div2Impl(Array<sp_t> &dividend,
                                          const Array<sp_t> &divisor)
   {
-    avx2::InternalDiv(this->Size(),
-                      this->GetBuffer(),
-                      dividend.GetBuffer(),
-                      divisor.GetBuffer());
+    avx2::InternalDiv(this->size(),
+                      this->data(),
+                      dividend.data(),
+                      divisor.data());
     return *this;
   }
 

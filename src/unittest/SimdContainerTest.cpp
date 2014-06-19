@@ -20,32 +20,32 @@ BOOST_AUTO_TEST_SUITE(SimdContainerTestSuite)
 khyber::SimdContainer<khyber::sp_t> MakeContainer(khyber::sp_t** addr)
 {
   khyber::SimdContainer<khyber::sp_t> temp(512);
-  *addr = temp.GetBuffer();
+  *addr = temp.data();
   return std::move(temp);
 }
 
 BOOST_AUTO_TEST_CASE(TestSimdContainerConstructors)
 {
   khyber::SimdContainer<khyber::sp_t> c0(512);
-  BOOST_CHECK(c0.Capacity() == 512);
+  BOOST_CHECK(c0.capacity() == 512);
   for ( size_t i = 0; i < 512; ++i )
-    c0.GetBuffer()[i] = i;
+    c0.data()[i] = i;
 
   khyber::SimdContainer<khyber::sp_t> c1(c0);
-  BOOST_CHECK(c1.Capacity() == 512);
-  BOOST_CHECK(c0.GetBuffer() != c1.GetBuffer());
+  BOOST_CHECK(c1.capacity() == 512);
+  BOOST_CHECK(c0.data() != c1.data());
   for ( size_t i = 0; i < 512; ++i )
-    BOOST_CHECK(c0.GetBuffer()[i] == c1.GetBuffer()[i]);
+    BOOST_CHECK(c0.data()[i] == c1.data()[i]);
   
   khyber::SimdContainer<khyber::sp_t> c2(512);
   c2 = c1;
-  BOOST_CHECK(c1.GetBuffer() != c2.GetBuffer());
+  BOOST_CHECK(c1.data() != c2.data());
   for ( size_t i = 0; i < 512; ++i )
-    BOOST_CHECK(c1.GetBuffer()[i] == c2.GetBuffer()[i]);
+    BOOST_CHECK(c1.data()[i] == c2.data()[i]);
   
   khyber::sp_t* pBuffer;
   c2 = MakeContainer(&pBuffer);
-  BOOST_CHECK(pBuffer == c2.GetBuffer());
+  BOOST_CHECK(pBuffer == c2.data());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

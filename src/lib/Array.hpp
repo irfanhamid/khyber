@@ -20,7 +20,21 @@
 namespace khyber
 {
   ///
-  /// Provides a growable vector implementation with built-in SIMD compute capability
+  /// \brief Growable 1D array (vector) implementation with built-in SIMD compute capability
+  /// \details This class is intended to be a drop-in replacement for the std::vector<T> class. Internally it uses
+  /// a \link ProcessorCaps\endlink object to determine the details of the processor and then selects the most optimum
+  /// mechanism for computation, i.e., serial, SSE, AVX, AVX2 or AVX512. The template parameter T can be any of:
+  /// * sp_t: single-precision floating point, corresponding to a C++ float;
+  /// * dp_t: double-precision floating point, corresponding to a C++ double;
+  /// * ui8_t/i8_t: 8-bit unsigned/signed integral type;
+  /// * ui16_t/i16_t: 16-bit unsigned/signed integral type;
+  /// * ui32_t/i32_t: 32-bit unsigned/signed integral type;
+  /// * ui64_t/i64_t: 64-bit unsigned/signed integral type.
+  ///
+  /// Currently, only the sp_t specialization is implemented, i.e., Array<sp_t>. Developers should not use Array<sp_t>
+  /// directly but should instead utilize the provided typedefs:
+  /// * SinglePrecisionArray;
+  /// * DoublePrecisionArray.
   ///
   template<typename T>
   class Array : public SimdContainer<T>
@@ -124,7 +138,8 @@ namespace khyber
     Array<T> Add(const Array<T>& addend);
 
     ///
-    /// \brief Add contents of augend and addend arrays into 'this' and return it. The object whose Add( ) is called can also be passed as augend for a cumulative addition, i.e., a.Add(a, b) to express a = a + b
+    /// \brief Add contents of augend and addend arrays into 'this' and return it. The object whose Add( ) is called can
+    /// also be passed as augend for a cumulative addition, i.e., a.Add(a, b) to express a = a + b
     /// \param augend first component for addition, it can also be 'this'
     /// \param addend second component for addition
     /// \return 'this'
@@ -140,7 +155,8 @@ namespace khyber
     Array<T> Sub(const Array<T>& subtrahend);
 
     ///
-    /// \brief Sub subtract subtrahend from minuend into 'this' and return it. The object whose Sub( ) is called can also be passed as minuend for a cumulative subtraction, i.e., a.Sub(a, b) to express a = a - b
+    /// \brief Sub subtract subtrahend from minuend into 'this' and return it. The object whose Sub( ) is called can also be
+    /// passed as minuend for a cumulative subtraction, i.e., a.Sub(a, b) to express a = a - b
     /// \param minuend first component for subtraction, it can also be 'this'
     /// \param subtrahend second component for subtraction
     /// \return 'this'
@@ -156,7 +172,8 @@ namespace khyber
     Array<T> Mul(const Array<T>& multiplier);
 
     ///
-    /// \brief Mul multiply the contents of multiplier and multiplicand into 'this' and return it. The object whose Mul( ) is called can also be passed as multiplier, i.e., a.Mul(a, b) to express a = a * b
+    /// \brief Mul multiply the contents of multiplier and multiplicand into 'this' and return it. The object whose Mul( ) is
+    /// called can also be passed as multiplier, i.e., a.Mul(a, b) to express a = a * b
     /// \param multiplier first component for multiplication, it can also be 'this'
     /// \param multiplicand second component for multiplication
     /// \return 'this'
@@ -172,7 +189,8 @@ namespace khyber
     Array<T> Div(const Array<T>& divisor);
 
     ///
-    /// \brief Div divide the contents of dividend by divisor into 'this' and return it. The object whose Div( ) is called can also be passed as dividend, i.e., a.Div(a, b) to express a = a / b
+    /// \brief Div divide the contents of dividend by divisor into 'this' and return it. The object whose Div( ) is called can
+    /// also be passed as dividend, i.e., a.Div(a, b) to express a = a / b
     /// \param dividend first component for division, it can also be 'this'
     /// \param divisor second component for division
     /// \return 'this'
@@ -187,7 +205,8 @@ namespace khyber
     Array<T> Sqrt();
 
     ///
-    /// \brief SqrtAcc computes the square root of each element in the param array and assigns it to 'this'. The object whose Sqrt( ) is called can also be passed as src, i.e., a.Sqrt(a) to express a = sqrt(a)
+    /// \brief SqrtAcc computes the square root of each element in the param array and assigns it to 'this'. The object whose
+    /// Sqrt( ) is called can also be passed as src, i.e., a.Sqrt(a) to express a = sqrt(a)
     /// \param src the Array<T> whose square root is to be computed, can also be 'this'
     /// \return 'this'
     ///
@@ -200,7 +219,8 @@ namespace khyber
     Array<T> Square();
 
     ///
-    /// \brief Square computes the square of each element in the src array and assigns it to 'this'. The object whose Square( ) is called can also be passed as src, i.e., a.Square(a) to express a = a * a
+    /// \brief Square computes the square of each element in the src array and assigns it to 'this'. The object whose Square( ) is
+    /// called can also be passed as src, i.e., a.Square(a) to express a = a * a
     /// \param src the Array<T> whose square is to be computed, can also be 'this'
     /// \return 'this'
     ///
@@ -213,7 +233,8 @@ namespace khyber
     Array<T> Cube();
 
     ///
-    /// \brief Cube computes the cube of each element in the param src and assigns it to 'this'. The object whose Cube( ) is called can also be passed as src, i.e., a.Cube(a) to express a = a * a * a
+    /// \brief Cube computes the cube of each element in the param src and assigns it to 'this'. The object whose Cube( ) is called
+    /// can also be passed as src, i.e., a.Cube(a) to express a = a * a * a
     /// \param src the Array<T> whose cube is to be computed, can also be 'this'
     /// \return 'this'
     ///
@@ -226,7 +247,27 @@ namespace khyber
     ///
     T DotProduct(const Array<T>& multiplicand) const;
 
-  protected:
+    ///
+    /// \brief Compute the sum of all elements in this Array<T>
+    /// \return the scalar sum of all elements
+    ///
+    T Summation() const;
+
+    ///
+    /// \brief Negates each element of 'this' and returns it in a new array of the same dimension
+    /// \return move-returned Array<T>
+    ///
+    Array<T> Negate();
+
+    ///
+    /// \brief Negates each element of the Array<T> src and assigns it to 'this'. The object whose Negate( ) is called can also be passed as src, i.e.,
+    /// a.Negate(a) for a = -a;
+    /// \param src the Array<T> to negate, can also be 'this'
+    /// \return  'this'
+    ///
+    Array<T>& Negate(Array<T>& src);
+
+  private:
     // The following function pointers are bound to one of the <op>Impl( ) member functions
     // below based on the ProcessorCaps object which determines the CPU's capabilities
     // Each operation can be performed in one of three ways:
@@ -252,26 +293,13 @@ namespace khyber
     Array<T>& (Array<T>::*Square2Impl) (Array<T>&);
 
     Array<T> (Array<T>::*CubeImpl) ();
-    Array<T>& (Array<T>::*Cube2Impl) (const Array<T>&);
+    Array<T>& (Array<T>::*Cube2Impl) (Array<T>&);
+
+    Array<T> (Array<T>::*NegateImpl) ();
+    Array<T>& (Array<T>::*Negate2Impl) (Array<T>& src);
 
     T (Array<T>::*DotProductImpl) (const Array<T>&) const;
-
-    /////////////////////////// AVX2 dispatchers //////////////////////////////
-    Array<T> Avx2AddImpl(const Array<T>& addend);
-    Array<T>& Avx2Add2Impl(Array<T>& augend, const Array<T>& addend);
-    Array<T> Avx2SubImpl(const Array<T>& subtrahend);
-    Array<T>& Avx2Sub2Impl(Array<T>& minuend, const Array<T>& subtrahend);
-    Array<T> Avx2MulImpl(const Array<T>& multiplicand);
-    Array<T>& Avx2Mul2Impl(Array<T>& multiplier, const Array<T>& multiplicand);
-    Array<T> Avx2DivImpl(const Array<T>& divisor);
-    Array<T>& Avx2Div2Impl(Array<T>& dividend, const Array<T>& divisor);
-    Array<T> Avx2SqrtImpl();
-    Array<T>& Avx2Sqrt2Impl(Array<T>& src);
-    Array<T> Avx2SquareImpl();
-    Array<T>& Avx2Square2Impl(Array<T>& src);
-    Array<T> Avx2CubeImpl();
-    Array<T>& Avx2Cube2Impl(Array<T>& src);
-    ///////////////////////////////////////////////////////////////////////////
+    T (Array<T>::*SummationImpl) () const;
 
     /////////////////////////// AVX dispatchers ///////////////////////////////
     Array<T> AvxAddImpl(const Array<T>& addend);
@@ -285,8 +313,18 @@ namespace khyber
     Array<T> AvxSqrtImpl();
     Array<T>& AvxSqrt2Impl(Array<T>& src);
     Array<T> AvxSquareImpl();
+    Array<T>& AvxSquare2Impl(Array<T>& src);
     Array<T> AvxCubeImpl();
     Array<T>& AvxCube2Impl(Array<T>& src);
+    Array<T> AvxNegateImpl();
+    Array<T>& AvxNegate2Impl(Array<T>& src);
+    T AvxDotProductImpl(const Array<T>& multiplicand) const;
+    T AvxSummationImpl() const;
+    ///////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////// AVX2 dispatchers //////////////////////////////
+    Array<T> Avx2NegateImpl();
+    Array<T>& Avx2Negate2Impl(Array<T>& src);
     ///////////////////////////////////////////////////////////////////////////
 
     void BuildArchBinding();
@@ -360,7 +398,7 @@ namespace khyber
     Array<T>& FallbackDiv2Impl(Array<T>& dividend,
                                const Array<T>& divisor)
     {
-      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
+      for ( size_t i = 0; i < this->size(); ++i ) {
         this->_buffer[i] = dividend._buffer[i] / divisor._buffer[i];
       }
       return *this;
@@ -378,7 +416,7 @@ namespace khyber
     Array<T>& FallbackSqrt2Impl(Array<T>& src)
     {
       for ( size_t i = 0; i < this->size(); ++i ) {
-        this[i] = sqrt(this[i]);
+        this[i] = sqrt(src[i]);
       }
 
       return *this;
@@ -386,9 +424,9 @@ namespace khyber
 
     Array<T> FallbackSquareImpl()
     {
-      Array<T> res(this->Size());
-      for ( size_t i = 0; i < this->Size(); ++i ) {
-        res[i] = this[i] * this[i];
+      Array<T> res(this->size());
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        res[i] = this->_buffer[i] * this->_buffer[i];
       }
 
       return std::move(res);
@@ -396,8 +434,8 @@ namespace khyber
 
     Array<T>& FallbackSquare2Impl(Array<T>& src)
     {
-      for ( size_t i = 0; i < this->Size(); ++i ) {
-        this[i] = this[i] * this[i];
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        this->_buffer[i] = this->_buffer[i] * src[i];
       }
 
       return *this;
@@ -405,9 +443,9 @@ namespace khyber
 
     Array<T> FallbackCubeImpl()
     {
-      Array<T> res(this->Size());
-      for ( size_t i = 0; i < this->Size(); ++i ) {
-        res[i] = this[i] * this[i] * this[i];
+      Array<T> res(this->size());
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        res[i] = this->_buffer[i] * this->_buffer[i] * this->_buffer[i];
       }
 
       return std::move(res);
@@ -415,15 +453,53 @@ namespace khyber
 
     Array<T>& FallbackCube2Impl(Array<T>& src)
     {
-      for ( size_t i = 0; i < this->Size(); ++i ) {
+      for ( size_t i = 0; i < this->size(); ++i ) {
         this[i] = src[i] * src[i] * src[i];
+      }
+
+      return *this;
+    }
+
+    T FallbackDotProductImpl(const Array<T>& multiplicand) const
+    {
+      T product = 0;
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        product += (this->_buffer[i] * multiplicand[i]);
+      }
+
+      return product;
+    }
+
+    T FallbackSummationImpl() const
+    {
+      T sum = 0;
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        sum += this->_buffer[i];
+      }
+
+      return sum;
+    }
+
+    Array<T> FallbackNegateImpl()
+    {
+      Array<T> negated(this->size());
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        negated[i] = -this->_buffer[i];
+      }
+
+      return std::move(negated);
+    }
+
+    Array<T>& FallbackNegate2Impl(Array<T>& src)
+    {
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        this[i] = -src[i];
       }
 
       return *this;
     }
   };
   
-  // Developers should use the following types rather than define your own templated types
   typedef Array<sp_t> SinglePrecisionArray;
   typedef Array<dp_t> DoublePrecisionArray;
 }

@@ -24,6 +24,9 @@
 
 namespace khyber
 {
+  ///
+  /// \brief The base class for all SIMD data structures, encapsulates an aligned std::vector<T> alongwith processor information.
+  ///
   template<typename T>
   class SimdContainer
   {

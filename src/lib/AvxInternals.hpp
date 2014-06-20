@@ -19,40 +19,150 @@
 
 namespace khyber
 {
+  ///
+  /// \brief Low-level functions for vector operations using the AVX instruction set.
+  ///
+  /// This namespace provides C-style functions for computation using the AVX instruction set. These functions are used internally by
+  /// \link Array<T>\endlink to carry out the actual computations when the \link ProcessorCaps\endlink indicates that the AVX instruction
+  /// set is present. While it is possible to use these functions for end-use, it is strongly suggested to use the \link Array<T>\endlink
+  /// class instead; the functions in this namespace are not processor aware, if you use them on a processor without AVX support, it will
+  /// cause a fault, i.e., hardware exception.
+  ///
   namespace avx
   {
     ///
-    /// Using Intel64 AVX instructions:
-    /// Add the two single-precision floating point arrays addend0 and addend1 of size elements into sum
-    /// sum[0:size-1] = addend0[0:size-1] + addend1[0:size-1]
+    /// \brief InternalAdd add the two single-precision floating point arrays augend and addend into sum
+    /// \param size the number of elements in all three array parameters
+    /// \param sum
+    /// \param augend
+    /// \param addend
     ///
     void InternalAdd(size_t size,
                      sp_t* sum,
-                     const sp_t* augend,
+                     sp_t* augend,
                      const sp_t* addend);
 
+    ///
+    /// \brief InternalSub subtract the single-precision array subtrahend from minuend and store the result in difference
+    /// \param size the number of elements in all three array parameters
+    /// \param difference
+    /// \param minuend
+    /// \param subtrahend
+    ///
     void InternalSub(size_t size,
                      sp_t* difference,
-                     const sp_t* minuend,
+                     sp_t* minuend,
                      const sp_t* subtrahend);
 
+    ///
+    /// \brief InternalMul multiply the single-precision arrays multiplicand and multiplier and store the result in product. This can be considered
+    /// the classical cross product of two vectors
+    /// \param size the number of elements in all three array parameters
+    /// \param product
+    /// \param multiplicand
+    /// \param multiplier
+    ///
     void InternalMul(size_t size,
                      sp_t* product,
-                     const sp_t* multiplicand,
-                     const sp_t* multiplier);
+                     sp_t* multiplier,
+                     const sp_t* multiplicand);
 
+    ///
+    /// \brief InternalDiv divide the single-precision array dividend by divisor and store the results in quotient
+    /// \param size the number of elements in all three array parameters
+    /// \param quotient
+    /// \param dividend
+    /// \param divisor
+    ///
     void InternalDiv(size_t size,
                      sp_t* quotient,
-                     const sp_t* dividend,
+                     sp_t* dividend,
                      const sp_t* divisor);
 
+
+    ///
+    /// \brief InternalSqrt compute the square root of every element in the single-precision array src and store the results in dst
+    /// \param size the number of elements in both array parameters
+    /// \param dst
+    /// \param src
+    ///
+    void InternalSqrt(size_t size,
+                      sp_t* dst,
+                      sp_t* src);
+
+    ///
+    /// \brief InternalSquare compute the square of every element in the array src and store it in the array dst
+    /// \param size the number of elements in both array parameters
+    /// \param dst
+    /// \param src
+    ///
+    void InternalSquare(size_t size,
+                        sp_t* dst,
+                        sp_t* src);
+
+    ///
+    /// \brief Compute the cube of every element in the array src and store it in the array dst.
+    /// \param size the number of elements in both array parameters
+    /// \param dst
+    /// \param src
+    ///
+    void InternalCube(size_t size,
+                      sp_t* dst,
+                      sp_t* src);
+
+    ///
+    /// \brief Compute the sum of all elements in the single-precision array src, the output is a scalar. Note this is not the prefix sum,
+    /// the src array remains unchanged.
+    /// \param size the number of elements in both array parameters
+    /// \param sum
+    /// \param src
+    ///
+    void InternalSummation(size_t size,
+                           sp_t* sum,
+                           const sp_t* src);
+
+    ///
+    /// \brief InternalPrefixSum compute the prefix sum (each element is the cumulative sum of all elements up to and including it) of the src array and store it in dst
+    /// \param size
+    /// \param dst
+    /// \param src
+    ///
+    void InternalPrefixSum(size_t size,
+                           sp_t* dst,
+                           sp_t* src);
+
+    ///
+    /// \brief InternalDotProduct compute the dot product of the single-precision arrays multiplicand and multiplier using the FMA intrinsic, store in product
+    /// \param size the number of elements in both array parameters
+    /// \param product pointer to a scalar single-precision float
+    /// \param multiplier
+    /// \param multiplicand
+    ///
     void InternalDotProduct(size_t size,
                             sp_t* product,
                             const sp_t* multiplier,
                             const sp_t* multiplicand);
 
-    void InternalSqrt(size_t size,
-                      sp_t* dst,
-                      sp_t* src);
+    ///
+    /// \brief InternalDotProductFma compute the dot product of the single-precision arrays multiplicand and multiplier using the FMA intrinsic, store in product
+    /// \param size the number of elements in both array parameters
+    /// \param product pointer to a scalar single-precision float
+    /// \param multiplier
+    /// \param multiplicand
+    ///
+    void InternalDotProductFma(size_t size,
+                               sp_t* product,
+                               const sp_t* multiplier,
+                               const sp_t* multiplicand);
+
+    ///
+    /// \brief Change the sign of every element in src and store the result in dst
+    /// \param size the number of elements in both array parameters
+    /// \param dst
+    /// \param src
+    ///
+    void InternalNegate(size_t size,
+                        sp_t* dst,
+                        sp_t* src);
   }
 }

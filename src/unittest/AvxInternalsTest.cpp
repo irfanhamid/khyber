@@ -17,7 +17,7 @@
 #include "AvxInternals.hpp"
 
 #define EPSILON 0.001
-#define TEST_VECTOR_LENGTH 512
+#define TEST_VECTOR_LENGTH 5
 
 BOOST_AUTO_TEST_SUITE(AvxInternalsTestSuite)
 
@@ -31,19 +31,19 @@ BOOST_AUTO_TEST_CASE(TestAvxAddSinglePrecision)
   }
 
   sp_t sum[TEST_VECTOR_LENGTH];
-  sp_t augend[TEST_VECTOR_LENGTH];
-  sp_t addend[TEST_VECTOR_LENGTH];
+  sp_t addend0[TEST_VECTOR_LENGTH];
+  sp_t addend1[TEST_VECTOR_LENGTH];
   for ( size_t i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
-    augend[i] = i;
-    addend[i] = 2 * i;
+    addend0[i] = i;
+    addend1[i] = 2 * i;
   }
-  
+
   avx::InternalAdd(TEST_VECTOR_LENGTH,
-                   sum,
-                   augend,
-                   addend);
+                           sum,
+                           addend0,
+                           addend1);
   for ( size_t i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
-    if ( sum[i] != (augend[i] + addend[i]) ) {
+    if ( sum[i] != (addend0[i] + addend1[i]) ) {
       BOOST_CHECK_MESSAGE(false, i);
       break;
     }
@@ -66,9 +66,9 @@ BOOST_AUTO_TEST_CASE(TestAvxSubSinglePrecision)
   }
 
   avx::InternalSub(TEST_VECTOR_LENGTH,
-                   difference,
-                   minuend,
-                   subtrahend);
+                    difference,
+                    minuend,
+                    subtrahend);
   for ( size_t i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
     if ( difference[i] != (minuend[i] - subtrahend[i]) ) {
       BOOST_CHECK_MESSAGE(false, i);
@@ -93,9 +93,9 @@ BOOST_AUTO_TEST_CASE(TestAvxMulSinglePrecision)
   }
 
   avx::InternalMul(TEST_VECTOR_LENGTH,
-                   product,
-                   multiplier,
-                   multiplicand);
+                    product,
+                    multiplier,
+                    multiplicand);
   for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
     if ( product[i] != multiplier[i] * multiplicand[i] ) {
       BOOST_CHECK_MESSAGE(false, i);
@@ -120,9 +120,9 @@ BOOST_AUTO_TEST_CASE(TestAvxDivSinglePrecision)
   }
 
   avx::InternalDiv(TEST_VECTOR_LENGTH,
-                   quotient,
-                   dividend,
-                   divisor);
+                    quotient,
+                    dividend,
+                    divisor);
   for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
     if ( quotient[i] != dividend[i] / divisor[i] ) {
       BOOST_CHECK_MESSAGE(false, i);
@@ -145,14 +145,68 @@ BOOST_AUTO_TEST_CASE(TestAvxSqrtSinglePrecision)
   }
 
   avx::InternalSqrt(TEST_VECTOR_LENGTH,
-                    dst,
-                    src);
+                     dst,
+                     src);
   for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
     if ( abs(dst[i] * dst[i] - src[i]) > EPSILON ) {
       BOOST_CHECK_MESSAGE(false, i);
       break;
     }
   }
+}
+
+BOOST_AUTO_TEST_CASE(TestAvxPowersSinglePrecision)
+{
+  ProcessorCaps caps;
+  if ( !caps.IsAvx() ) {
+    return;
+  }
+
+  sp_t src[TEST_VECTOR_LENGTH];
+  sp_t sqr[TEST_VECTOR_LENGTH];
+  sp_t cub[TEST_VECTOR_LENGTH];
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    src[i] = i * (i % 2 ? 1 : -1);
+  }
+
+  avx::InternalSquare(TEST_VECTOR_LENGTH,
+                       sqr,
+                       src);
+  avx::InternalCube(TEST_VECTOR_LENGTH,
+                     cub,
+                     src);
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    if ( sqr[i] != src[i] * src[i] ) {
+      BOOST_CHECK_MESSAGE(false, i);
+      break;
+    }
+    if ( cub[i] != src[i] * src[i] * src[i] ) {
+      BOOST_CHECK_MESSAGE(false, i);
+      break;
+    }
+  }
+}
+
+BOOST_AUTO_TEST_CASE(TestAvxArraySum)
+{
+  ProcessorCaps caps;
+  if ( !caps.IsAvx() ) {
+    return;
+  }
+
+  const size_t LEN = 531;
+  sp_t refVal = 0;
+  sp_t src[LEN];
+  for ( auto i = 0; i < LEN; ++i ) {
+    src[i] = i;
+    refVal += i;
+  }
+
+  sp_t sum;
+  avx::InternalSummation(LEN,
+                          &sum,
+                          src);
+  BOOST_CHECK_EQUAL(sum, refVal);
 }
 
 BOOST_AUTO_TEST_CASE(TestAvxDotProductSinglePrecision)
@@ -167,17 +221,48 @@ BOOST_AUTO_TEST_CASE(TestAvxDotProductSinglePrecision)
   sp_t multiplier[TEST_VECTOR_LENGTH];
 
   sp_t refVal = 0;
-  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+  for ( size_t i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
     multiplicand[i] = 0.1 * i;
     multiplier[i] = i;
     refVal += (multiplicand[i] * multiplier[i]);
   }
 
   avx::InternalDotProduct(TEST_VECTOR_LENGTH,
-                          &product,
-                          multiplicand,
-                          multiplier);
+                                   &product,
+                                   multiplicand,
+                                   multiplier);
   BOOST_CHECK_EQUAL(refVal, product);
+
+  avx::InternalDotProductFma(TEST_VECTOR_LENGTH,
+                              &product,
+                              multiplicand,
+                              multiplier);
+  BOOST_CHECK_EQUAL(refVal, product);
+}
+
+BOOST_AUTO_TEST_CASE(TestAvxNegate)
+{
+  ProcessorCaps caps;
+  if ( !caps.IsAvx() ) {
+    return;
+  }
+
+  sp_t negated[TEST_VECTOR_LENGTH];
+  sp_t src[TEST_VECTOR_LENGTH];
+
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    src[i] = i / 10;
+  }
+
+  avx::InternalNegate(TEST_VECTOR_LENGTH,
+                      negated,
+                      src);
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    if ( negated[i] != -src[i] ) {
+      BOOST_CHECK_MESSAGE(false, i);
+      break;
+    }
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

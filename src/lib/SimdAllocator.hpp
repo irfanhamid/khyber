@@ -19,6 +19,9 @@
 
 namespace khyber
 {
+  ///
+  /// \brief Aligned memory allocator for working with SIMD (SSE, AVX) instructions
+  ///
   template<typename T, size_t alignment>
   struct SimdAllocator
   {

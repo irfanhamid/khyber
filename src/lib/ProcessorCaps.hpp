@@ -74,6 +74,13 @@ __asm__ __volatile__ ("cpuid":          \
 
 namespace khyber
 {
+  ///
+  /// \brief The ProcessorCaps class provides an easy way to query IA64 processor capabilities.
+  /// \details This class uses the CPUID instruction to get information about the processor and its capabilities, which are then
+  /// exposed in the form of Is<Capability>() member functions. Information such as whether or not the processor
+  /// provides, and if so, up to which version, AVX and AVX2, the FMA instruction and cache line levels and sizes etc.,
+  /// are all provided.
+  ///
   class ProcessorCaps
   {
   public:

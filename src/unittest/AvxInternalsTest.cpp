@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cmath>
 #include <boost/test/unit_test.hpp>
 #include "ProcessorCaps.hpp"
 #include "AvxInternals.hpp"
@@ -263,6 +264,32 @@ BOOST_AUTO_TEST_CASE(TestAvxNegate)
       break;
     }
   }
+}
+
+BOOST_AUTO_TEST_CASE(TestAvxDistance)
+{
+  ProcessorCaps caps;
+  if ( !caps.IsAvx() ) {
+    return;
+  }
+
+  sp_t v1[19];
+  sp_t v2[19];
+
+  sp_t refVal = 0;
+  for ( auto i = 0; i < 19; ++i ) {
+    v1[i] = i * 1.1;
+    v2[i] = i / 1.1;
+    refVal += ((v1[i] - v2[i]) * (v1[i] - v2[i]));
+  }
+  refVal = sqrt(refVal);
+
+  sp_t distance;
+  avx::InternalDistance(19,
+                        &distance,
+                        v1,
+                        v2);
+  BOOST_CHECK_LT(abs(distance - refVal), EPSILON);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

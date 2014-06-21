@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <emmintrin.h>
 #include <immintrin.h>
 #include <cmath>
 #include "AvxInternals.hpp"
@@ -249,6 +248,32 @@ namespace khyber
       for ( ; i < size; ++i ) {
         dst[i] = -src[i];
       }
+    }
+
+    void InternalDistance(size_t size,
+                          sp_t* distance,
+                          const sp_t *v1,
+                          const sp_t *v2)
+    {
+      const __m256* pV1 = (const __m256*)v1;
+      const __m256* pV2 = (const __m256*)v2;
+      __m256 scratch;
+      __m256 accumulator = _mm256_setzero_ps();
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        scratch = _mm256_sub_ps(pV1[i], pV2[i]);
+        scratch = _mm256_mul_ps(scratch, scratch);
+        accumulator = _mm256_add_ps(accumulator, scratch);
+      }
+
+      sp_t* tmp = (sp_t*)&accumulator;
+      *distance = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        *distance += ((v1[i] - v2[i]) * (v1[i] - v2[i]));
+      }
+      *distance = sqrt(*distance);
     }
   }
 }

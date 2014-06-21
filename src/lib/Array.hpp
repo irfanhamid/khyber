@@ -241,9 +241,10 @@ namespace khyber
     Array<T>& Cube(Array<T>& src);
 
     ///
-    /// \brief CrossProduct computes the dot product between multiplicand and 'this' vectors, size of multiplicand must be the same as size of 'this'
+    /// \brief CrossProduct computes the dot product between multiplicand and 'this' vectors, size of multiplicand must be the same as size of 'this'.
+    /// You can also pass 'this' as multiplicand, in which case this will compute the magnitude^2 of the 'this' vector.
     /// \param multiplicand
-    /// \return scalar dot product
+    /// \return double-precision scalar dot product
     ///
     T DotProduct(const Array<T>& multiplicand) const;
 
@@ -266,6 +267,13 @@ namespace khyber
     /// \return  'this'
     ///
     Array<T>& Negate(Array<T>& src);
+
+    ///
+    /// \brief Compute the distance between 'this' and v2 in vector space. Distance is defined as, with v1 = this, sqrt((v1[0]-v2[0])^2 + ... v1[n-1]*v2[n-1]^2)
+    /// \param v2
+    /// \return double-precision linear distance between 'this' and v2
+    ///
+    T Distance(const Array<T>& v2) const;
 
   private:
     // The following function pointers are bound to one of the <op>Impl( ) member functions
@@ -300,6 +308,7 @@ namespace khyber
 
     T (Array<T>::*DotProductImpl) (const Array<T>&) const;
     T (Array<T>::*SummationImpl) () const;
+    T (Array<T>::*DistanceImpl) (const Array<T>&) const;
 
     /////////////////////////// AVX dispatchers ///////////////////////////////
     Array<T> AvxAddImpl(const Array<T>& addend);
@@ -320,6 +329,7 @@ namespace khyber
     Array<T>& AvxNegate2Impl(Array<T>& src);
     T AvxDotProductImpl(const Array<T>& multiplicand) const;
     T AvxSummationImpl() const;
+    T AvxDistanceImpl(const Array<T>& v2) const;
     ///////////////////////////////////////////////////////////////////////////
 
     /////////////////////////// AVX2 dispatchers //////////////////////////////
@@ -497,6 +507,16 @@ namespace khyber
       }
 
       return *this;
+    }
+
+    T FallbackDistanceImpl(const Array<T>& v2) const
+    {
+      T distance = 0;
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        distance += sqrt((this->_buffer[i] - v2[i]) * (this->_buffer[i] - v2[i]));
+      }
+
+      return distance;
     }
   };
   

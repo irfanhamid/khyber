@@ -1,0 +1,8 @@
+/**
+\mainpage Khyber SIMD compute library
+
+Khyber is a C++ library for high performance vector and matrix computation. In order to achieve optimal performance, it uses the vector processing instruction sets of the host CPU, namely, the various flavours of SSE and AVX provided by the IA64 architectures. The underlying processor(s) are queried for their capabilities and the most advanced instruction set available is selected at runtime to do the actual computations. In its current version, the library provides a growable, 1D container class, Array<T>, which is designed to be a drop-in replacement for the std::vector<T>. The only complete implementation is currently for single-precision floating point vectors, i.e., only Array<sp_t>, where sp_t is a typedef for C++ float.
+
+<H3>Introduction to SIMD</H3>
+Modern processors.
+*/

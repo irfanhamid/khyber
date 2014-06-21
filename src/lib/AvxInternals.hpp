@@ -132,9 +132,9 @@ namespace khyber
                            sp_t* src);
 
     ///
-    /// \brief InternalDotProduct compute the dot product of the single-precision arrays multiplicand and multiplier using the FMA intrinsic, store in product
+    /// \brief InternalDotProduct compute the dot product of the single-precision arrays multiplicand and multiplier, store in product
     /// \param size the number of elements in both array parameters
-    /// \param product pointer to a scalar single-precision float
+    /// \param product pointer to a scalar single-precision float into which the dot product will be output
     /// \param multiplier
     /// \param multiplicand
     ///
@@ -146,7 +146,7 @@ namespace khyber
     ///
     /// \brief InternalDotProductFma compute the dot product of the single-precision arrays multiplicand and multiplier using the FMA intrinsic, store in product
     /// \param size the number of elements in both array parameters
-    /// \param product pointer to a scalar single-precision float
+    /// \param product pointer to a scalar single-precision float into which the dot product will be output
     /// \param multiplier
     /// \param multiplicand
     ///
@@ -164,5 +164,17 @@ namespace khyber
     void InternalNegate(size_t size,
                         sp_t* dst,
                         sp_t* src);
+
+    ///
+    /// \brief Compute the linear (geometric) distance between the two vectors, store in distance
+    /// \param size the number of elements in both array parameters
+    /// \param distance pointer to a scalar single-precision floating point into which the distance will be output
+    /// \param v1 array representing 1st point in size()-dimensional space
+    /// \param v2 array representing 2nd point in size()-dimensional space
+    ///
+    void InternalDistance(size_t size,
+                          sp_t* distance,
+                          const sp_t* v1,
+                          const sp_t* v2);
   }
 }

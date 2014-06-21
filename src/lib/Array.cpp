@@ -110,6 +110,24 @@ namespace khyber
     return (this->*Cube2Impl)(src);
   }
 
+  template<>
+  sp_t Array<sp_t>::DotProduct(const Array<sp_t>& multiplicand) const
+  {
+    return (this->*DotProductImpl)(multiplicand);
+  }
+
+  template<>
+  sp_t Array<sp_t>::Summation() const
+  {
+    return (this->*SummationImpl)();
+  }
+
+  template<>
+  sp_t Array<sp_t>::Distance(const Array<sp_t>& v2) const
+  {
+    return (this->*DistanceImpl)(v2);
+  }
+
   /////////////////////////////////////////////////////////////////////////////
   
 
@@ -302,6 +320,17 @@ namespace khyber
     return *this;
   }
 
+  template<>
+  sp_t Array<sp_t>::AvxDistanceImpl(const Array<sp_t>& v2) const
+  {
+    sp_t distance = 0.0;
+    avx::InternalDistance(this->size(),
+                          &distance,
+                          this->data(),
+                          v2.data());
+    return distance;
+  }
+
   /////////////////////////////////////////////////////////////////////////////
 
 
@@ -350,6 +379,7 @@ namespace khyber
     SummationImpl = &Array<sp_t>::FallbackSummationImpl;
     NegateImpl = &Array<sp_t>::FallbackNegateImpl;
     Negate2Impl = &Array<sp_t>::FallbackNegate2Impl;
+    DistanceImpl = &Array<sp_t>::FallbackDistanceImpl;
   }
 
   template<>
@@ -373,6 +403,7 @@ namespace khyber
     SummationImpl = &Array<sp_t>::AvxSummationImpl;
     NegateImpl = &Array<sp_t>::AvxNegateImpl;
     Negate2Impl = &Array<sp_t>::AvxNegate2Impl;
+    DistanceImpl = &Array<sp_t>::AvxDistanceImpl;
   }
 
   template<>

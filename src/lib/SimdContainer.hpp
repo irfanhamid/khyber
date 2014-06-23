@@ -37,7 +37,7 @@ namespace khyber
     typedef std::vector<T, SimdAllocator<T, DEFAULT_ALIGNMENT>> vector_type;
     
     ///
-    /// \brief SimdContainer Construct a container of default size
+    /// \brief Construct a container of default size
     ///
     SimdContainer()
     {
@@ -45,7 +45,7 @@ namespace khyber
     }
 
     ///
-    /// \brief SimdContainer Construct a container of specified size
+    /// \brief Construct a container of specified size
     /// \param capacity the initial capacity of the container
     ///
     SimdContainer(size_t capacity)
@@ -54,7 +54,7 @@ namespace khyber
     }
     
     ///
-    /// \brief SimdContainer const copy constructor
+    /// \brief Const copy constructor
     /// \param rhs the SimdContainer<T> to copy from
     ///
     SimdContainer(const SimdContainer<T>& rhs)
@@ -72,7 +72,7 @@ namespace khyber
     }
 
     ///
-    /// \brief SimdContainer non-const move constructor
+    /// \brief Non-const move constructor
     /// \param rhs the SimdContainer<T> to pilfer from
     ///
     SimdContainer(SimdContainer<T>&& rhs) : _buffer(std::move(rhs._buffer))
@@ -80,7 +80,7 @@ namespace khyber
     }
     
     ///
-    /// \brief operator = move assignment operator
+    /// \brief Move assignment operator
     /// \param rhs the SimdContainer<T> to pilfer from
     /// \return 'this'
     ///
@@ -91,7 +91,7 @@ namespace khyber
     }
 
     ///
-    /// \brief operator = copy assignment operator
+    /// \brief Copy assignment operator
     /// \param rhs the SimdContainer<T> to copy from
     /// \return 'this'
     ///
@@ -102,7 +102,32 @@ namespace khyber
     }
 
     ///
-    /// \brief push_back Adds a new element at the end of the vector, after its current last element. The content of val is copied (or moved) to the new element
+    /// \brief Checks if the container has no elements
+    /// \return true if the container is empty, false otherwise
+    ///
+    bool empty() const
+    {
+      return _buffer.empty();
+    }
+
+    ///
+    /// \brief Requests the removal of unused capacity
+    ///
+    void shrink_to_fit()
+    {
+      _buffer.shrink_to_fit();
+    }
+
+    ///
+    /// \brief Removes all elements from the container, leaves the capacity( ) of the vector unchanged.
+    ///
+    void clear()
+    {
+      _buffer.clear();
+    }
+
+    ///
+    /// \brief Adds a new element at the end of the vector, after its current last element. The content of val is copied (or moved) to the new element
     /// \param val Value to be copied (or moved) to the new element
     ///
     void push_back(const T& val)
@@ -111,7 +136,7 @@ namespace khyber
     }
 
     ///
-    /// \brief push_back Adds a new element at the end of the vector, after its current last element. The content of val is copied (or moved) to the new element
+    /// \brief Adds a new element at the end of the vector, after its current last element. The content of val is copied (or moved) to the new element
     /// \param val Value to be copied (or moved) to the new element
     ///
     void push_back(T&& val)
@@ -129,7 +154,7 @@ namespace khyber
     }
 
     ///
-    /// \brief capacity the capacity of the underlying memory buffer
+    /// \brief Query the capacity of the underlying memory buffer
     /// \return capacity
     ///
     size_t capacity() const
@@ -138,7 +163,7 @@ namespace khyber
     }
     
     ///
-    /// \brief data return the mutable pointer to the start of the underlying memory buffer, use with extreme care
+    /// \brief Return the mutable pointer to the start of the underlying memory buffer, use with extreme care
     /// \return non-const pointer to data
     ///
     T* data()
@@ -147,7 +172,7 @@ namespace khyber
     }
 
     ///
-    /// \brief data return the const pointer to the start of the underlying memory buffer, use with extreme care
+    /// \brief Return the const pointer to the start of the underlying memory buffer, use with extreme care
     /// \return const pointer to data
     ///
     const T* data() const

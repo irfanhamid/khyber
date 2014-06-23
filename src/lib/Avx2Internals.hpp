@@ -26,7 +26,8 @@ namespace khyber
   /// \link Array<T>\endlink to carry out the actual computations when the \link ProcessorCaps\endlink indicates that the AVX2 instruction
   /// set is present. While it is possible to use these functions for end-use, it is strongly suggested to use the \link Array<T>\endlink
   /// class instead; the functions in this namespace are not processor aware, if you use them on a processor without AVX2 support, it will
-  /// cause a fault, i.e., hardware exception.
+  /// cause a fault, i.e., hardware exception. Additionally, the \link Array<T>\endlink provides growable buffers as well as interface
+  /// compatibility between it and the std::vector<T> type.
   ///
   namespace avx2
   {

@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(TestArrayConstructors)
   BOOST_CHECK_EQUAL((uint64_t)arr1.data() % 32, 0);
   BOOST_CHECK_NE(arr0.data(), arr1.data());
   for ( int i = 0; i < 512; ++i )
-    BOOST_CHECK_EQUAL(arr0.At(i), arr1.At(i));
+    BOOST_CHECK_EQUAL(arr0.at(i), arr1.at(i));
   
   khyber::sp_t* pBuffer = nullptr;
   khyber::SinglePrecisionArray arr2(MakeArray(&pBuffer));

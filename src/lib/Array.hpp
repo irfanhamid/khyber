@@ -31,7 +31,7 @@ namespace khyber
   /// * ui32_t/i32_t: 32-bit unsigned/signed integral type;
   /// * ui64_t/i64_t: 64-bit unsigned/signed integral type.
   ///
-  /// Currently, only the sp_t specialization is implemented, i.e., Array<sp_t>. Developers should not use Array<sp_t>
+  /// <em>Currently, only the sp_t specialization is implemented</em>, i.e., Array<sp_t>. Developers should not use Array<sp_t>
   /// directly but should instead utilize the provided typedefs:
   /// * SinglePrecisionArray;
   /// * DoublePrecisionArray.
@@ -91,17 +91,9 @@ namespace khyber
     }
     
     ///
-    /// \brief Return the dimension (size) of this array
-    ///
-    inline size_t Dimension() const
-    {
-      return this->Size();
-    }
-    
-    ///
     /// \brief Returns reference to element at location index within the underlying buffer
     ///
-    inline T& At(size_t index)
+    inline T& at(size_t index)
     {
       return this->_buffer[index];
     }
@@ -109,7 +101,7 @@ namespace khyber
     ///
     /// \brief Returns const reference to element at location index within the underlying buffer
     ///
-    const inline T& At(size_t index) const
+    const inline T& at(size_t index) const
     {
       return this->_buffer[index];
     }

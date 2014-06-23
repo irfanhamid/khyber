@@ -17,16 +17,19 @@
 #include "ProcessorCaps.hpp"
 #include "AvxInternals.hpp"
 
+#define CHECK_DELTA(ref, actual, e) BOOST_CHECK_LE(abs(ref - actual), e)
+
 #define EPSILON 0.001
-#define TEST_VECTOR_LENGTH 5
+#define TEST_VECTOR_LENGTH 517
+
+extern khyber::ProcessorCaps caps;
 
 BOOST_AUTO_TEST_SUITE(AvxInternalsTestSuite)
 
 using namespace khyber;
 
 BOOST_AUTO_TEST_CASE(TestAvxAddSinglePrecision)
-{
-  ProcessorCaps caps;
+{  
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -53,7 +56,6 @@ BOOST_AUTO_TEST_CASE(TestAvxAddSinglePrecision)
 
 BOOST_AUTO_TEST_CASE(TestAvxSubSinglePrecision)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -80,7 +82,6 @@ BOOST_AUTO_TEST_CASE(TestAvxSubSinglePrecision)
 
 BOOST_AUTO_TEST_CASE(TestAvxMulSinglePrecision)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -105,9 +106,33 @@ BOOST_AUTO_TEST_CASE(TestAvxMulSinglePrecision)
   }
 }
 
+BOOST_AUTO_TEST_CASE(TestAvxScalarMulSinglePrecision)
+{
+  if ( !caps.IsAvx() ) {
+    return;
+  }
+
+  sp_t product[TEST_VECTOR_LENGTH];
+  sp_t src[TEST_VECTOR_LENGTH];
+  sp_t multiplier = 3.14159;
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    src[i] = i;
+  }
+
+  avx::InternalScalarMul(TEST_VECTOR_LENGTH,
+                         multiplier,
+                         product,
+                         src);
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    if ( product[i] != src[i] * multiplier ) {
+      BOOST_CHECK_MESSAGE(false, i);
+      break;
+    }
+  }
+}
+
 BOOST_AUTO_TEST_CASE(TestAvxDivSinglePrecision)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -132,9 +157,33 @@ BOOST_AUTO_TEST_CASE(TestAvxDivSinglePrecision)
   }
 }
 
+BOOST_AUTO_TEST_CASE(TestAvxScalarDivSinglePrecision)
+{
+  if ( !caps.IsAvx() ) {
+    return;
+  }
+
+  sp_t quotient[TEST_VECTOR_LENGTH];
+  sp_t src[TEST_VECTOR_LENGTH];
+  sp_t divisor = 3.14159;
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    src[i] = i;
+  }
+
+  avx::InternalScalarDiv(TEST_VECTOR_LENGTH,
+                         divisor,
+                         quotient,
+                         src);
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    if ( quotient[i] != src[i] / divisor ) {
+      BOOST_CHECK_MESSAGE(false, i);
+      break;
+    }
+  }
+}
+
 BOOST_AUTO_TEST_CASE(TestAvxSqrtSinglePrecision)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -158,7 +207,6 @@ BOOST_AUTO_TEST_CASE(TestAvxSqrtSinglePrecision)
 
 BOOST_AUTO_TEST_CASE(TestAvxPowersSinglePrecision)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -190,7 +238,6 @@ BOOST_AUTO_TEST_CASE(TestAvxPowersSinglePrecision)
 
 BOOST_AUTO_TEST_CASE(TestAvxArraySum)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -212,7 +259,6 @@ BOOST_AUTO_TEST_CASE(TestAvxArraySum)
 
 BOOST_AUTO_TEST_CASE(TestAvxDotProductSinglePrecision)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -243,7 +289,6 @@ BOOST_AUTO_TEST_CASE(TestAvxDotProductSinglePrecision)
 
 BOOST_AUTO_TEST_CASE(TestAvxNegate)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
@@ -268,16 +313,15 @@ BOOST_AUTO_TEST_CASE(TestAvxNegate)
 
 BOOST_AUTO_TEST_CASE(TestAvxDistance)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx() ) {
     return;
   }
 
-  sp_t v1[19];
-  sp_t v2[19];
+  sp_t v1[TEST_VECTOR_LENGTH];
+  sp_t v2[TEST_VECTOR_LENGTH];
 
   sp_t refVal = 0;
-  for ( auto i = 0; i < 19; ++i ) {
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
     v1[i] = i * 1.1;
     v2[i] = i / 1.1;
     refVal += ((v1[i] - v2[i]) * (v1[i] - v2[i]));
@@ -285,11 +329,31 @@ BOOST_AUTO_TEST_CASE(TestAvxDistance)
   refVal = sqrt(refVal);
 
   sp_t distance;
-  avx::InternalDistance(19,
+  avx::InternalDistance(TEST_VECTOR_LENGTH,
                         &distance,
                         v1,
                         v2);
   BOOST_CHECK_LT(abs(distance - refVal), EPSILON);
+}
+
+BOOST_AUTO_TEST_CASE(TestAvxReciprocate)
+{
+  if ( !caps.IsAvx() ) {
+    return;
+  }
+
+  sp_t reciprocated[TEST_VECTOR_LENGTH];
+  sp_t src[TEST_VECTOR_LENGTH];
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    src[i] = 1.0 / (sp_t)i;
+  }
+
+  avx::InternalReciprocate(TEST_VECTOR_LENGTH,
+                           reciprocated,
+                           src);
+  for ( auto i = 0; i < TEST_VECTOR_LENGTH; ++i ) {
+    CHECK_DELTA(reciprocated[i], i, EPSILON);
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

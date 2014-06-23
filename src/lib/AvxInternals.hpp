@@ -68,6 +68,18 @@ namespace khyber
                      const sp_t* multiplicand);
 
     ///
+    /// \brief Multiply a single-precision array by a scalar
+    /// \param size the number of elements in the array product and src
+    /// \param multiplier the scalar value by which to multiply the src array
+    /// \param product the resulting array, can be the same address as src
+    /// \param src the array to multiply
+    ///
+    void InternalScalarMul(size_t size,
+                           sp_t multiplier,
+                           sp_t* product,
+                           sp_t* src);
+
+    ///
     /// \brief InternalDiv divide the single-precision array dividend by divisor and store the results in quotient
     /// \param size the number of elements in all three array parameters
     /// \param quotient
@@ -79,6 +91,17 @@ namespace khyber
                      sp_t* dividend,
                      const sp_t* divisor);
 
+    ///
+    /// \brief Divide a single-precision array by a scalar
+    /// \param size the number of elements in the array quotient and src
+    /// \param divisor the scalar value by which to divide the src array
+    /// \param quotient the output array, can be the same address as src
+    /// \param src the array to divide
+    ///
+    void InternalScalarDiv(size_t size,
+                           sp_t divisor,
+                           sp_t* quotient,
+                           sp_t* src);
 
     ///
     /// \brief InternalSqrt compute the square root of every element in the single-precision array src and store the results in dst
@@ -176,5 +199,15 @@ namespace khyber
                           sp_t* distance,
                           const sp_t* v1,
                           const sp_t* v2);
+
+    ///
+    /// \brief Compute the reciprocal of every element in the src array and store it in the dst array
+    /// \param size the number of elements in both array parameters
+    /// \param dst destination array
+    /// \param src source array
+    ///
+    void InternalReciprocate(size_t size,
+                             sp_t* dst,
+                             sp_t* src);
   }
 }

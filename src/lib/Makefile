@@ -10,7 +10,7 @@ OBJS=Array.o \
 
 COMPNAME=libkhyber
 
-CXXFLAGS=-mavx -mavx2 -msse -msse2 -msse3 -msse4 -mfma -std=c++11 -g
+CXXFLAGS=-mavx -mavx2 -msse -msse2 -msse3 -msse4 -mfma -std=c++11 -O3
 
 default: ${COMPNAME}.a
 

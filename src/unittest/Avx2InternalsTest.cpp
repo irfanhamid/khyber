@@ -20,13 +20,14 @@
 #define EPSILON 0.001
 #define TEST_VECTOR_LENGTH 515
 
+extern khyber::ProcessorCaps caps;
+
 BOOST_AUTO_TEST_SUITE(Avx2InternalsTestSuite)
 
 using namespace khyber;
 
 BOOST_AUTO_TEST_CASE(TestAvx2Negate)
 {
-  ProcessorCaps caps;
   if ( !caps.IsAvx2() ) {
     return;
   }

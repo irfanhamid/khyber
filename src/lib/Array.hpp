@@ -116,6 +116,8 @@ namespace khyber
 
     ///
     /// \brief Returns reference to element at location index within the underlying buffer
+    /// \param index
+    /// \return reference to element at index
     ///
     inline T& operator [] (size_t index)
     {
@@ -124,6 +126,8 @@ namespace khyber
     
     ///
     /// \brief Returns const reference to element at location index within the underlying buffer
+    /// \param index
+    /// \return const reference to element at index
     ///
     const inline T& operator [] (size_t index) const
     {
@@ -182,6 +186,20 @@ namespace khyber
                   const Array<T>& multiplicand);
 
     ///
+    /// \brief Multiply every element of 'this' by multiplier and return the result in a new array of the same size
+    /// \param multiplier the scalar by which to multiply
+    /// \return move-returned Array<T>
+    ///
+    Array<T> ScalarMul(T multiplier);
+
+    ///
+    /// \brief Scalar multiplication of 'this' by multiplier, result stored in 'this'
+    /// \param multiplier the scalar value to multiply with each element of 'this'
+    /// \return 'this'
+    ///
+    Array<T>& TransformScalarMul(T multiplier);
+
+    ///
     /// \brief Div divide the contents of 'this' by divisor into a new array and return it
     /// \param divisor
     /// \return move-returned Array<T>
@@ -197,6 +215,20 @@ namespace khyber
     ///
     Array<T>& Div(Array<T>& dividend,
                   const Array<T>& divisor);
+
+    ///
+    /// \brief Divide 'this' by scalar and return result in a new array of same size
+    /// \param divisor the scalar value to divide by
+    /// \return move-returned Array<T>
+    ///
+    Array<T> ScalarDiv(T divisor);
+
+    ///
+    /// \brief Divide each element of 'this' by the scalar divisor and store in 'this'
+    /// \param divisor the scalar value to divide by
+    /// \return 'this'
+    ///
+    Array<T>& TransformScalarDiv(T divisor);
 
     ///
     /// \brief Sqrt computes the square root of each element in this array and returns it in a new array of the same dimension
@@ -269,6 +301,18 @@ namespace khyber
     Array<T>& Negate(Array<T>& src);
 
     ///
+    /// \brief Allocate a new Array<T> of the same size as 'this', assign reciprocals of 'this' to each element of the new array and return it
+    /// \return move-returned Array<T>
+    ///
+    Array<T> Reciprocate();
+
+    ///
+    /// \brief Replace each element in 'this' with its reciprocal value, i.e., 1/x. The maximum relative error for this approximation is less than 1.5*2^-12.
+    /// \return 'this'
+    ///
+    Array<T>& TransformReciprocate();
+
+    ///
     /// \brief Compute the distance between 'this' and v2 in vector space. Distance is defined as, with v1 = this, sqrt((v1[0]-v2[0])^2 + ... v1[n-1]*v2[n-1]^2)
     /// \param v2
     /// \return double-precision linear distance between 'this' and v2
@@ -290,9 +334,13 @@ namespace khyber
 
     Array<T> (Array<T>::*MulImpl) (const Array<T>&);
     Array<T>& (Array<T>::*Mul2Impl) (Array<T>&, const Array<T>&);
+    Array<T> (Array<T>::*ScalarMulImpl) (T);
+    Array<T>& (Array<T>::*TransformScalarMulImpl) (T);
 
     Array<T> (Array<T>::*DivImpl) (const Array<T>&);
     Array<T>& (Array<T>::*Div2Impl) (Array<T>&, const Array<T>&);
+    Array<T> (Array<T>::*ScalarDivImpl) (T);
+    Array<T>& (Array<T>::*TransformScalarDivImpl) (T);
 
     Array<T> (Array<T>::*SqrtImpl) ();
     Array<T>& (Array<T>::*Sqrt2Impl) (Array<T>&);
@@ -306,6 +354,9 @@ namespace khyber
     Array<T> (Array<T>::*NegateImpl) ();
     Array<T>& (Array<T>::*Negate2Impl) (Array<T>& src);
 
+    Array<T> (Array<T>::*ReciprocateImpl) ();
+    Array<T>& (Array<T>::*TransformReciprocateImpl) ();
+
     T (Array<T>::*DotProductImpl) (const Array<T>&) const;
     T (Array<T>::*SummationImpl) () const;
     T (Array<T>::*DistanceImpl) (const Array<T>&) const;
@@ -317,8 +368,12 @@ namespace khyber
     Array<T>& AvxSub2Impl(Array<T>& minuend, const Array<T>& subtrahend);
     Array<T> AvxMulImpl(const Array<T>& multiplicand);
     Array<T>& AvxMul2Impl(Array<T>& multiplier, const Array<T>& multiplicand);
+    Array<T> AvxScalarMulImpl(T multiplier);
+    Array<T>& AvxTransformScalarMulImpl(T multiplier);
     Array<T> AvxDivImpl(const Array<T>& divisor);
     Array<T>& AvxDiv2Impl(Array<T>& dividend, const Array<T>& divisor);
+    Array<T> AvxScalarDivImpl(T divisor);
+    Array<T>& AvxTransformScalarDivImpl(T divisor);
     Array<T> AvxSqrtImpl();
     Array<T>& AvxSqrt2Impl(Array<T>& src);
     Array<T> AvxSquareImpl();
@@ -328,6 +383,8 @@ namespace khyber
     Array<T> AvxNegateImpl();
     Array<T>& AvxNegate2Impl(Array<T>& src);
     T AvxDotProductImpl(const Array<T>& multiplicand) const;
+    Array<T> AvxReciprocateImpl();
+    Array<T>& AvxTransformReciprocateImpl();
     T AvxSummationImpl() const;
     T AvxDistanceImpl(const Array<T>& v2) const;
     ///////////////////////////////////////////////////////////////////////////
@@ -345,10 +402,7 @@ namespace khyber
     Array<T> FallbackAddImpl(const Array<T>& addend)
     {
       Array<T> sum(this->_buffer.size());
-      for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
-        sum[i] = this->_buffer[i] + addend._buffer[i];
-      }
-      return std::move(sum);
+      return std::move(sum.Add(sum, addend));
     }
 
     Array<T>& FallbackAdd2Impl(Array<T>& augend,
@@ -357,6 +411,7 @@ namespace khyber
       for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
         this->_buffer[i] = augend._buffer[i] + addend._buffer[i];
       }
+
       return *this;
     }
 
@@ -366,6 +421,7 @@ namespace khyber
       for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
         difference._buffer[i] = this->_buffer[i] - subtrahend._buffer[i];
       }
+
       return std::move(difference);
     }
 
@@ -375,6 +431,7 @@ namespace khyber
       for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
         this->_buffer[i] = minuend._buffer[i] - subtrahend._buffer[i];
       }
+
       return *this;
     }
 
@@ -384,6 +441,7 @@ namespace khyber
       for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
         product._buffer[i] = this->_buffer[i] * multiplicand._buffer[i];
       }
+
       return std::move(product);
     }
 
@@ -393,6 +451,16 @@ namespace khyber
       for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
         this->_buffer[i] = multiplier._buffer[i] * multiplicand._buffer[i];
       }
+
+      return *this;
+    }
+
+    Array<T>& FallbackMulScalarImpl(T multiplier)
+    {
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        this->_buffer[i] *= multiplier;
+      }
+
       return *this;
     }
 
@@ -402,6 +470,7 @@ namespace khyber
       for ( size_t i = 0; i < this->_buffer.size(); ++i ) {
         quotient._buffer[i] = this->_buffer[i] / divisor._buffer[i];
       }
+
       return std::move(quotient);
     }
 
@@ -411,6 +480,22 @@ namespace khyber
       for ( size_t i = 0; i < this->size(); ++i ) {
         this->_buffer[i] = dividend._buffer[i] / divisor._buffer[i];
       }
+
+      return *this;
+    }
+
+    Array<T> FallbackScalarDivImpl(T divisor)
+    {
+      Array<T> result(this->size());
+      return std::move(result.Div(divisor));
+    }
+
+    Array<T>& FallbackTransformScalarDivImpl(T divisor)
+    {
+      for ( size_t i = 0; i > this->size(); ++i ) {
+        this->_buffer[i] /= divisor;
+      }
+
       return *this;
     }
 
@@ -517,6 +602,15 @@ namespace khyber
       }
 
       return distance;
+    }
+
+    Array<T>& FallbackTransformReciprocateImpl(T divisor)
+    {
+      for ( size_t i = 0; i < this->size(); ++i ) {
+        this->_buffer[i] /= divisor;
+      }
+
+      return *this;
     }
   };
   

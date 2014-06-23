@@ -62,6 +62,18 @@ namespace khyber
   }
 
   template<>
+  Array<sp_t> Array<sp_t>::ScalarMul(sp_t multiplier)
+  {
+    return (this->*ScalarMulImpl)(multiplier);
+  }
+
+  template<>
+  Array<sp_t>& Array<sp_t>::TransformScalarMul(sp_t multiplier)
+  {
+    return (this->*TransformScalarMulImpl)(multiplier);
+  }
+
+  template<>
   Array<sp_t> Array<sp_t>::Div(const Array<sp_t> &divisor)
   {
     return (this->*DivImpl)(divisor);
@@ -72,6 +84,18 @@ namespace khyber
                                 const Array<sp_t> &divisor)
   {
     return (this->*Div2Impl)(dividend, divisor);
+  }
+
+  template<>
+  Array<sp_t> Array<sp_t>::ScalarDiv(sp_t divisor)
+  {
+    return (this->*ScalarDivImpl)(divisor);
+  }
+
+  template<>
+  Array<sp_t>& Array<sp_t>::TransformScalarDiv(sp_t divisor)
+  {
+    return (this->*TransformScalarDivImpl)(divisor);
   }
 
   template<>
@@ -126,6 +150,18 @@ namespace khyber
   sp_t Array<sp_t>::Distance(const Array<sp_t>& v2) const
   {
     return (this->*DistanceImpl)(v2);
+  }
+
+  template<>
+  Array<sp_t> Array<sp_t>::Reciprocate()
+  {
+    return (this->*ReciprocateImpl)();
+  }
+
+  template<>
+  Array<sp_t>& Array<sp_t>::TransformReciprocate()
+  {
+    return (this->*TransformReciprocateImpl)();
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -201,6 +237,23 @@ namespace khyber
   }
 
   template<>
+  Array<sp_t>& Array<sp_t>::AvxTransformScalarMulImpl(sp_t multiplier)
+  {
+    avx::InternalScalarMul(this->size(),
+                           multiplier,
+                           this->data(),
+                           this->data());
+    return *this;
+  }
+
+  template<>
+  Array<sp_t> Array<sp_t>::AvxScalarMulImpl(sp_t multiplier)
+  {
+    Array<sp_t> product(this->size());
+    return std::move(AvxTransformScalarMulImpl(multiplier));
+  }
+
+  template<>
   Array<sp_t> Array<sp_t>::AvxDivImpl(const Array<sp_t> &divisor)
   {
     Array<sp_t> quotient(divisor.size());
@@ -222,6 +275,22 @@ namespace khyber
     return *this;
   }
 
+  template<>
+  Array<sp_t>& Array<sp_t>::AvxTransformScalarDivImpl(sp_t divisor)
+  {
+    avx::InternalScalarDiv(this->size(),
+                           divisor,
+                           this->data(),
+                           this->data());
+    return *this;
+  }
+
+  template<>
+  Array<sp_t> Array<sp_t>::AvxScalarDivImpl(sp_t divisor)
+  {
+    Array<sp_t> quotient(this->size());
+    return std::move(AvxTransformScalarDivImpl(divisor));
+  }
 
   template<>
   Array<sp_t> Array<sp_t>::AvxSqrtImpl()
@@ -329,6 +398,22 @@ namespace khyber
                           this->data(),
                           v2.data());
     return distance;
+  }
+
+  template<>
+  Array<sp_t> Array<sp_t>::AvxReciprocateImpl()
+  {
+    Array<sp_t> reciprocal(this->size());
+    return std::move(reciprocal.TransformReciprocate());
+  }
+
+  template<>
+  Array<sp_t>& Array<sp_t>::AvxTransformReciprocateImpl()
+  {
+    avx::InternalReciprocate(this->size(),
+                             this->data(),
+                             this->data());
+    return *this;
   }
 
   /////////////////////////////////////////////////////////////////////////////

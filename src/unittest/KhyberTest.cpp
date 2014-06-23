@@ -15,3 +15,6 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE "Unittests for the khyber project"
 #include <boost/test/unit_test.hpp>
+#include "ProcessorCaps.hpp"
+
+khyber::ProcessorCaps caps;

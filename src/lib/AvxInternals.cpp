@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <immintrin.h>
+#include <avxintrin.h>
 #include <cmath>
 #include "AvxInternals.hpp"
 
@@ -80,6 +81,26 @@ namespace khyber
       }
     }
 
+    void InternalScalarMul(size_t size,
+                           sp_t multiplier,
+                           sp_t *product,
+                           sp_t *src)
+    {
+      __m256* pSrc = (__m256*)src;
+      __m256* pProduct = (__m256*)product;
+      __m256 ymmMultiplier = _mm256_set1_ps(multiplier);
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        pProduct[i] = _mm256_mul_ps(pSrc[i], ymmMultiplier);
+      }
+
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        product[i] = src[i] * multiplier;
+      }
+    }
+
     void InternalDiv(size_t size,
                      sp_t* quotient,
                      sp_t* dividend,
@@ -97,6 +118,26 @@ namespace khyber
       i <<= 3;
       for ( ; i < size; ++i ) {
         quotient[i] = dividend[i] / divisor[i];
+      }
+    }
+
+    void InternalScalarDiv(size_t size,
+                           sp_t divisor,
+                           sp_t* quotient,
+                           sp_t* src)
+    {
+      __m256* pSrc = (__m256*)src;
+      __m256* pQuotient = (__m256*)quotient;
+      __m256 ymmDivisor = _mm256_set1_ps(divisor);
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        pQuotient[i] = _mm256_div_ps(pSrc[i], ymmDivisor);
+      }
+
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        quotient[i] = src[i] / divisor;
       }
     }
 
@@ -274,6 +315,24 @@ namespace khyber
         *distance += ((v1[i] - v2[i]) * (v1[i] - v2[i]));
       }
       *distance = sqrt(*distance);
+    }
+
+    void InternalReciprocate(size_t size,
+                             sp_t *dst,
+                             sp_t *src)
+    {
+      __m256* pDst = (__m256*)dst;
+      __m256* pSrc = (__m256*)src;
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        pDst[i] = _mm256_rcp_ps(pSrc[i]);
+      }
+
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        dst[i] = 1.0 / src[i];
+      }
     }
   }
 }

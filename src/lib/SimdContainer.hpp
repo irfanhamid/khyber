@@ -27,6 +27,10 @@ namespace khyber
   ///
   /// \brief The base class for all SIMD data structures, encapsulates an aligned std::vector<T> alongwith processor information.
   ///
+  /// Most of the API for this class, as well as the \link Array<T>\endlink conforms to the std::vector<T> type. However, that results in a small bit
+  /// of inconsistencies in the API naming convention. For example, the type is CamelCased, as is the method \link OverrideProcessorCaps( )\endlink, but
+  /// the rest of the API is GNU style, e.g., \link resize( )\endlink, \link size( )\endlink and \link push_back( )\endlink.
+  ///
   template<typename T>
   class SimdContainer
   {
@@ -111,6 +115,34 @@ namespace khyber
     }
 
     ///
+    /// \brief Resizes the container so that it contains n elements. See std::vector<T>::resize( ) documentation for details.
+    /// \param n new container size, expressed in number of elements
+    ///
+    void resize(size_t n)
+    {
+      _buffer.resize(n);
+    }
+
+    ///
+    /// \brief Resizes the container so that it contains n elements, initialize to val. See std::vector<T>::resize( ) documentation for details.
+    /// \param n new container size, expressed in number of elements
+    /// \param val object whose contents are to be copied into new elements in case val > size( )
+    ///
+    void resize(size_t n, const T& val)
+    {
+      _buffer.resize(n, val);
+    }
+
+    ///
+    /// \brief Requests that the container capacity be at least enough to contain n elements.
+    /// \param minimum capacity for the container
+    ///
+    void reserve(size_t n)
+    {
+      _buffer.reserve(n);
+    }
+
+    ///
     /// \brief Requests the removal of unused capacity
     ///
     void shrink_to_fit()
@@ -187,6 +219,20 @@ namespace khyber
     void swap(vector_type& buffer)
     {
       _buffer.swap(buffer);
+    }
+
+    ///
+    /// \brief <em>Not for end-use</em>, overrides the ProcessorCaps (capabilities) object associated to this SimdContainer<T>.
+    ///
+    /// Do \e not use this method as an end-user developer, it is only provided for diagnostic capabilities to be used by Khyber developers. The override
+    /// allows for testing of implementations other than the most efficient for the current architecture, e.g., allow execution of serial computation
+    /// methods on an AVX or AVX2 processor.
+    ///
+    /// \param procCaps the ProcessorCaps to override with for this SimdContainer<T>
+    ///
+    void OverrideProcessorCaps(ProcessorCaps procCaps)
+    {
+      _procCaps = procCaps;
     }
 
   protected:

@@ -416,28 +416,6 @@ namespace khyber
     return *this;
   }
 
-  template<>
-  Array<sp_t> Array<sp_t>::AvxAddImpl(const Array<sp_t>& addend)
-  {
-    Array<sp_t> sum(this->_buffer.size());
-    avx::InternalAdd(this->_buffer.size(),
-                     sum._buffer.data(),
-                     this->_buffer.data(),
-                     addend._buffer.data());
-    return std::move(sum);
-  }
-
-  template<>
-  Array<ui32_t>& Array<ui32_t>::AvxAdd2Impl(Array<ui32_t> &augend,
-                                            const Array<ui32_t> &addend)
-  {
-    avx::InternalAdd(this->_buffer.size(),
-                     this->_buffer.data(),
-                     augend._buffer.data(),
-                     addend._buffer.data());
-    return *this;
-  }
-
   /////////////////////////////////////////////////////////////////////////////
 
 

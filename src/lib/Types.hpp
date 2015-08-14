@@ -20,12 +20,12 @@
 
 namespace khyber
 {
-  typedef uint16_t ui16_t;
-  typedef uint32_t ui32_t;
-  typedef uint64_t ui64_t;
-  typedef int16_t i16_t;
-  typedef int32_t i32_t;
-  typedef int64_t i64_t;  
-  typedef float sp_t;
-  typedef double dp_t;
+  typedef uint16_t ui16_t alignas(DEFAULT_ALIGNMENT);
+  typedef uint32_t ui32_t alignas(DEFAULT_ALIGNMENT);
+  typedef uint64_t ui64_t alignas(DEFAULT_ALIGNMENT);
+  typedef int16_t i16_t alignas(DEFAULT_ALIGNMENT);
+  typedef int32_t i32_t alignas(DEFAULT_ALIGNMENT);
+  typedef int64_t i64_t alignas(DEFAULT_ALIGNMENT);
+  typedef float sp_t alignas(DEFAULT_ALIGNMENT);
+  typedef double dp_t alignas(DEFAULT_ALIGNMENT);
 }

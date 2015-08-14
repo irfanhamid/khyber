@@ -32,16 +32,16 @@ namespace khyber
   namespace avx2
   {
     ///
-    /// \brief InternalAdd add the two 32-bit unsigned integer arrays augend and addend together and store the result in sum
+    /// \brief InternalAdd add the two float arrays augend and addend together and store the result in sum
     /// \param size the number of elements in all three array parameters
     /// \param sum
     /// \param augend
     /// \param addend
     ///
     void InternalAdd(size_t size,
-                     ui32_t* sum,
-                     ui32_t* augend,
-                     const ui32_t* addend);
+                     sp_t* sum,
+                     sp_t* augend,
+                     const sp_t* addend);
     ///
     /// \brief Change the sign of every element in src and store the result in dst
     /// \param size the number of elements in both array parameters

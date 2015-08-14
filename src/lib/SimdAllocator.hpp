@@ -25,7 +25,36 @@ namespace khyber
   template<typename T, size_t alignment>
   struct SimdAllocator
   {
+    typedef std::size_t size_type;
+    typedef std::ptrdiff_t difference_type;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef T& reference;
+    typedef const T& const_reference;
     typedef T value_type;
+
+    template<typename U>
+    struct rebind {
+      typedef SimdAllocator<U, alignment> other;
+    };
+
+    SimdAllocator() throw() {}
+
+    SimdAllocator(const SimdAllocator&) throw() {}
+
+    template<typename U>
+    SimdAllocator(const SimdAllocator<U, alignment>&) throw() {}
+
+    template<typename U>
+    SimdAllocator& operator = (const SimdAllocator<U, alignment>&)
+    {
+      return *this;
+    }
+
+    SimdAllocator<T, alignment>& operator = (const SimdAllocator&)
+    {
+      return *this;
+    }
 
     T* allocate(size_t n)
     {
@@ -36,15 +65,17 @@ namespace khyber
     {
       _mm_free(p);
     }
-
-    bool operator == (const SimdAllocator<T, alignment>& rhs)
-    {
-      return true;
-    }
-
-    bool operator != (const SimdAllocator<T, alignment>& rhs)
-    {
-      return false;
-    }
   };
+
+  template<typename T, typename U, size_t alignment>
+  inline bool operator == (const SimdAllocator<T, alignment>&, const SimdAllocator<U, alignment>&)
+  {
+    return true;
+  }
+
+  template<typename T, typename U, size_t alignment>
+  inline bool operator != (const SimdAllocator<T, alignment>& lhs, const SimdAllocator<U, alignment>& rhs)
+  {
+    return !(lhs == rhs);
+  }
 }

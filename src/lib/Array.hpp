@@ -382,6 +382,8 @@ namespace khyber
     ///////////////////////////////////////////////////////////////////////////
 
     /////////////////////////// AVX2 dispatchers //////////////////////////////
+    Array<T> Avx2AddImpl(const Array<T>& addend);
+    Array<T>& Avx2Add2Impl(Array<T>& augend, const Array<T>& addend);
     Array<T> Avx2NegateImpl();
     Array<T>& Avx2Negate2Impl(Array<T>& src);
     ///////////////////////////////////////////////////////////////////////////
@@ -608,4 +610,5 @@ namespace khyber
   
   typedef Array<sp_t> SinglePrecisionArray;
   typedef Array<dp_t> DoublePrecisionArray;
+  typedef Array<ui32_t> UInt32Array;
 }

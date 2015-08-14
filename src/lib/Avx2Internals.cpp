@@ -12,16 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "Enable.hpp"
 #include <immintrin.h>
-#include <avxintrin.h>
-#include <avx2intrin.h>
 #include <cmath>
+#include <iostream>
 #include "Avx2Internals.hpp"
 
 namespace khyber
 {
   namespace avx2
   {
+    void InternalAdd(size_t size,
+                     ui32_t* sum,
+                     ui32_t* augend,
+                     const ui32_t* addend)
+    {
+      std::cout << "hello world\n";
+      __m256i* pSum = (__m256i*)sum;
+      __m256i* pAugend = (__m256i*)augend;
+      __m256i* pAddend = (__m256i*)addend;
+
+      size_t i;
+      for ( i = 0; i < (size >> 3); ++i ) {
+        pSum[i] = _mm256_add_epi32(pAugend[i], pAddend[i]);
+      }
+
+      i <<= 3;
+      for ( ; i < size; ++i ) {
+        sum[i] = augend[i] + addend[i];
+      }
+    }
+
     void InternalNegate(size_t size,
                         sp_t *dst,
                         sp_t *src)

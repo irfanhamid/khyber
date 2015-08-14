@@ -416,12 +416,56 @@ namespace khyber
     return *this;
   }
 
+  template<>
+  Array<sp_t> Array<sp_t>::AvxAddImpl(const Array<sp_t>& addend)
+  {
+    Array<sp_t> sum(this->_buffer.size());
+    avx::InternalAdd(this->_buffer.size(),
+                     sum._buffer.data(),
+                     this->_buffer.data(),
+                     addend._buffer.data());
+    return std::move(sum);
+  }
+
+  template<>
+  Array<ui32_t>& Array<ui32_t>::AvxAdd2Impl(Array<ui32_t> &augend,
+                                            const Array<ui32_t> &addend)
+  {
+    avx::InternalAdd(this->_buffer.size(),
+                     this->_buffer.data(),
+                     augend._buffer.data(),
+                     addend._buffer.data());
+    return *this;
+  }
+
   /////////////////////////////////////////////////////////////////////////////
 
 
 
   ////////////////////// AVX2 implementation dispatchers //////////////////////
 
+  template<>
+  Array<sp_t> Array<sp_t>::Avx2AddImpl(const Array<sp_t>& addend)
+  {
+    Array<sp_t> sum(this->_buffer.size());
+    avx2::InternalAdd(this->_buffer.size(),
+		      sum._buffer.data(),
+		      this->_buffer.data(),
+		      addend._buffer.data());
+    return std::move(sum);
+  }
+
+  template<>
+  Array<sp_t>& Array<sp_t>::Avx2Add2Impl(Array<sp_t> &augend,
+					 const Array<sp_t> &addend)
+  {
+    avx2::InternalAdd(this->_buffer.size(),
+		      this->_buffer.data(),
+		      augend._buffer.data(),
+		      addend._buffer.data());
+    return *this;
+  }
+  
   template<>
   Array<sp_t> Array<sp_t>::Avx2NegateImpl()
   {
@@ -494,6 +538,8 @@ namespace khyber
   template<>
   void Array<sp_t>::BuildAvx2ArchBinding()
   {
+    AddImpl = &Array<sp_t>::Avx2AddImpl;
+    Add2Impl = &Array<sp_t>::Avx2Add2Impl;
     NegateImpl = &Array<sp_t>::Avx2NegateImpl;
     Negate2Impl = &Array<sp_t>::Avx2Negate2Impl;
   }

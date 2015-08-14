@@ -20,12 +20,12 @@
 
 namespace khyber
 {
-  typedef __declspec(align(DEFAULT_ALIGNMENT))uint16_t ui16_t;
-  typedef __declspec(align(DEFAULT_ALIGNMENT))uint32_t ui32_t;
-  typedef __declspec(align(DEFAULT_ALIGNMENT))uint64_t ui64_t;
-  typedef __declspec(align(DEFAULT_ALIGNMENT))int16_t i16_t;
-  typedef __declspec(align(DEFAULT_ALIGNMENT))int32_t i32_t;
-  typedef __declspec(align(DEFAULT_ALIGNMENT))int64_t i64_t;  
-  typedef __declspec(align(DEFAULT_ALIGNMENT))float sp_t;
-  typedef __declspec(align(DEFAULT_ALIGNMENT))double dp_t;
+  typedef uint16_t ui16_t;
+  typedef uint32_t ui32_t;
+  typedef uint64_t ui64_t;
+  typedef int16_t i16_t;
+  typedef int32_t i32_t;
+  typedef int64_t i64_t;  
+  typedef float sp_t;
+  typedef double dp_t;
 }

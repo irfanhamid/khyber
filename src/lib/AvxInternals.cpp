@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "Enable.hpp"
 #include <immintrin.h>
-#include <avxintrin.h>
 #include <cmath>
+#include <iostream>
 #include "AvxInternals.hpp"
 
 namespace khyber

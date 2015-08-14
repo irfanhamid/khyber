@@ -7,7 +7,8 @@ LIBS=-lboost_program_options \
 
 COMPNAME=sqrt_benchmarks
 
-CXXFLAGS=-mavx -mavx2 -msse -msse2 -msse3 -msse4 -mfma -std=c++11 -O3
+#CXXFLAGS=-mavx -mavx2 -msse -msse2 -msse3 -msse4 -mfma -std=c++11 -O3
+CXXFLAGS=-std=c++11 -O3
 
 default: ${COMPNAME}
 

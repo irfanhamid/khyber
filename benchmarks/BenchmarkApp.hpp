@@ -56,35 +56,30 @@ public:
     std::chrono::high_resolution_clock::time_point start;
     std::chrono::high_resolution_clock::time_point end;
 
+    
+    start = std::chrono::high_resolution_clock::now();
     for ( auto i = 0; i < _iterations; ++i ) {
-      start = std::chrono::high_resolution_clock::now();
-      if ( !RunSerial() ) {
-        std::cout << "Unable to run serial execution" << std::endl;
-        return false;
-      }
-      end = std::chrono::high_resolution_clock::now();
-      _serialDuration += (end - start);
+      RunSimd();
     }
+    end = std::chrono::high_resolution_clock::now();
+    _simdDuration = (end - start);
 
+    start = std::chrono::high_resolution_clock::now();
     for ( auto i = 0; i < _iterations; ++i ) {
-      start = std::chrono::high_resolution_clock::now();
-      if ( !RunSimd() ) {
-        std::cout << "Unable to run parallel execution" << std::endl;
-        return false;
-      }
-      end = std::chrono::high_resolution_clock::now();
-      _simdDuration += (end - start);
+      RunSerial();
     }
+    end = std::chrono::high_resolution_clock::now();
+    _serialDuration = (end - start);
 
     return true;
   }
 
-  virtual bool RunSerial()
+  virtual bool RunSimd()
   {
     return false;
   }
 
-  virtual bool RunSimd()
+  virtual bool RunSerial()
   {
     return false;
   }
@@ -103,7 +98,7 @@ public:
     reportStream << "Acceleration type: " << StringFromAcceleration(_acceleration) << std::endl;
     reportStream << "Serial ticks: " << _serialDuration.count() << std::endl;
     reportStream << "Simd ticks:   " << _simdDuration.count() << std::endl;
-    //reportStream << "Speedup percentage: " << ((double)(_serialTicks - _simdTicks) * 100.0 / (double)_serialTicks) << std::endl;
+    // reportStream << "Speedup percentage: " << ((double)(_serialDuration - _simdDuration) * 100.0 / (double)_serialDuration) << std::endl;
     return reportStream.str();
   }
 

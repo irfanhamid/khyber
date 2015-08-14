@@ -15,7 +15,6 @@
 #include "Enable.hpp"
 #include <immintrin.h>
 #include <cmath>
-#include <iostream>
 #include "AvxInternals.hpp"
 
 namespace khyber

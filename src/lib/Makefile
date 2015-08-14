@@ -1,4 +1,4 @@
-CC=g++
+CC=g++-4.8
 
 SRCS=Array.cpp \
 	AvxInternals.cpp \

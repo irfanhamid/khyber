@@ -38,7 +38,7 @@ namespace khyber
     ///
     /// \brief vector_type the underlying buffer's type, i.e., std::vector<T, ...>
     ///
-    typedef std::vector<T, SimdAllocator<T, DEFAULT_ALIGNMENT>> vector_type;
+    typedef std::vector<T, SimdAllocator<T, DEFAULT_ALIGNMENT> > vector_type;
     
     ///
     /// \brief Construct a container of default size

@@ -497,7 +497,7 @@ namespace khyber
     {
       Array<T> res(this->size());
       for ( size_t i = 0; i < this->size(); ++i )
-        res[i] = sqrt(this->_buffer[i]);
+        res[i] = (T)sqrt(this->_buffer[i]);
 
       return std::move(res);
     }
@@ -505,7 +505,7 @@ namespace khyber
     Array<T>& FallbackSqrt2Impl(Array<T>& src)
     {
       for ( size_t i = 0; i < this->size(); ++i ) {
-        this[i] = sqrt(src[i]);
+        this[i] = (T)sqrt(src[i]);
       }
 
       return *this;

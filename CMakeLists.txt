@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 2.8.0)
+cmake_minimum_required(VERSION 2.8.88888888)
 project(khyber)
 set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
-set(CMAKE_CXX_COMPILER_ID "GNU")
 add_subdirectory(src)

@@ -28,10 +28,10 @@ namespace. This is where the `Array<T>` class is defined, which is the primary
 user object provided by this library.
 
 `khyber: programmer API Array<T>, ProcessorCaps, SimdAllocator and SimdContainer`  
-   `|`  
-   `|--- arch/avx: optimized vector operations with AVX instruction sets`  
-   `|`  
-   `|--- arch/avx2: optimized vector operations with the AVX2 instruction sets`  
+`   |`  
+`   |--- arch/avx: optimized vector operations with AVX instruction sets`  
+`   |`  
+`   |--- arch/avx2: optimized vector operations with the AVX2 instruction sets`  
 
 ## Optimization mechanism
 

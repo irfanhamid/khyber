@@ -19,8 +19,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
-#include "Types.hpp"
-
 enum AccelerationType { Serial, AVX, AVX2, Optimum };
 
 namespace po = boost::program_options;

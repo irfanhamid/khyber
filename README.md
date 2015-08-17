@@ -4,7 +4,8 @@ Khyber is a C++ library that provides high-performance vector processing
 primitives. Under the hood it uses the fastest SIMD instruction set available on
 the CPU. Currently the implementation exploits the AVX2, AVX and SSE instruction
 sets on x64 processors. Khyber exposes its functionality in the form of a
-drop-in replacement for the C++ `std::vector<T>` data type `khyber::Array<T>`.
+drop-in replacement for the C++ `std::vector<T>` data type called
+`khyber::Array<T>`.
 
 Currently khyber supports 1D vector types `khyber::Array<T>` for the following
 data types:
@@ -15,47 +16,47 @@ data types:
 4. i16_t: signed 16-bit integer type, int16_t in C++;  
 2. sp_t: single-precision floating point, float in C++.  
 
-khyber::Array<T> provides addition, subtraction, multiplication, division and
+`khyber::Array<T>` provides addition, subtraction, multiplication, division and
 some other numerical operations such as square root and reciprocation. Detailed
-documentation can be found in the doxygen help for the library.
+documentation of operations provided can be found in the doxygen help for the
+library.
 
 ## Structure
 
-The library is layered with the programmer API present in the khyber
+The library is layered with the programmer API at the top, present in the khyber
 namespace. This is where the `Array<T>` class is defined, which is the primary
-object provided by this library.
+user object provided by this library.
 
-`khyber: khyber namespace, programmer API including the `Array<T>` class and
-helper classes like ProcessorCaps, SimdAllocator and SimdContainer  
-   |  
-   |--- arch/avx: avx namespace, impl of the optimized vector operations using
-   the AVX instruction sets  
-   |  
-   |--- arch/avx2: avx2 namespace, impl of the optimized vector operations using
+`khyber: khyber namespace, programmer API including the Array<T> class and
+helper classes like ProcessorCaps, SimdAllocator and SimdContainer`  
+   `|`  
+   `|--- arch/avx: avx namespace, impl of the optimized vector operations using
+   the AVX instruction sets`  
+   `|`  
+   `|--- arch/avx2: avx2 namespace, impl of the optimized vector operations using
    the AVX2 instruction sets`  
 
 ## Optimization mechanism
 
-The `Array<T>` class works by building a hand-written vtable of function
-pointers for arithmetic functionality such as Add, Sub, Mul, ScalarDiv, Sqrt
-etc. These are all wired to the most optimistic processor capability at the time
-of construction of the `Array<T>` object. After this wiring, each public
-function like Add() is actually a stub that calls the correct underlying impl.
+The `Array<T>` class works by building a kind of hand-written vtable each time
+an object of its type is constructed. The public functions like
+`Array<T>::Add()` are actually stubs that invoke function pointers for the
+implementation. This is the central idea of khyber: at `Array<T>` object
+construction time the CPU is queried for its functionality, and based on that
+the most efficient implementation is *wired up* to each of the vtable function
+pointers. Thus on a Sandy Bridge and Ivy Bridge CPUs the constructor will wire
+most functions to the arch/avx implementations because AVX is the highest
+instruction set supported; whereas on newer Haswell CPUs the AVX2 dispatch will
+be selected in the arch/avx2 location.
 
-The *underlying impl* mentioned above are contained in the arch/avx and
-arch/avx2 directories under these respective namespaces. These contain the files
-AvxInternals.cpp and Avx2Internals.cpp which have functions such as
-InternalAdd(), InternalSub() etc. These functions are implemented using
-optimized assembly via the intrinsics mechanism.
-
-
-khyber achieves optimum performance by executing dynamic dispatch of the
-`Array<T>` operations such as Add, Subtract etc. as a function of the CPU
-capabilities on which the code is running. These capabilities are queried and
-stored in the ProcessorCaps object. A neat trick to take full advantage of
-compiler optimization while keeping safety is that arch/avx is compiled with the
--mavx flag, and arch/avx2 with the -mavx2 flag. This would be unsafe in a
-regular program because you could run arch/avx2 code on a processor that doesn't
-support it and get an IllegalInstruction exception. However, since these
-packages are hidden behind the dynamic dispatch capability of khyber::Array<T>
-everything works out fine.
+The code in the arch/avx and arch/avx2 locations is implemented using the
+high-level assembly constructs provided in modern compilers called
+*intrinsics*. These are in effect assembler directives but with automatic
+register selection. A neat trick to take full advantage of compiler optimization
+while keeping safety is that arch/avx is compiled with the -mavx flag, and
+arch/avx2 with the -mavx2 flag. This would be unsafe in a regular program
+because you could run arch/avx2 code on a processor that doesn't support it and
+get an IllegalInstruction exception. However, since these packages are hidden
+behind the dynamic dispatch capability of `Array<T>` everything works out
+fine. Preliminary benchmarks show promising performance gains of up to 4x over
+stock C++ code even with full optimization turned on.

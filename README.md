@@ -27,14 +27,11 @@ The library is layered with the programmer API at the top, present in the khyber
 namespace. This is where the `Array<T>` class is defined, which is the primary
 user object provided by this library.
 
-`khyber: khyber namespace, programmer API including the Array<T> class and
-helper classes like ProcessorCaps, SimdAllocator and SimdContainer`  
+`khyber: programmer API Array<T>, ProcessorCaps, SimdAllocator and SimdContainer`  
    `|`  
-   `|--- arch/avx: avx namespace, impl of the optimized vector operations using
-   the AVX instruction sets`  
+   `|--- arch/avx: optimized vector operations with AVX instruction sets`  
    `|`  
-   `|--- arch/avx2: avx2 namespace, impl of the optimized vector operations using
-   the AVX2 instruction sets`  
+   `|--- arch/avx2: optimized vector operations with the AVX2 instruction sets`  
 
 ## Optimization mechanism
 

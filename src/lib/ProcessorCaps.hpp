@@ -18,7 +18,6 @@
 #include <string>
 #include <sstream>
 #include <cstdint>
-#include "Types.hpp"
   
 #define cpuid(func, eax, ebx, ecx, edx) \
 __asm__ __volatile__ ("cpuid":          \
@@ -96,7 +95,7 @@ namespace khyber
 
       cpuid(0, eax, ebx, ecx, edx);
       HighestFunction = eax;
-      ui32_t* brandPtr = (ui32_t*)_brand;
+      uint32_t* brandPtr = (uint32_t*)_brand;
       brandPtr[0] = ebx;
       brandPtr[1] = edx;
       brandPtr[2] = ecx;

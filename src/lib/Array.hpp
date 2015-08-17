@@ -24,14 +24,14 @@ namespace khyber
   /// \details This class is intended to be a drop-in replacement for the std::vector<T> class. Internally it uses
   /// a \link ProcessorCaps\endlink object to determine the details of the processor and then selects the most optimum
   /// mechanism for computation, i.e., serial, SSE, AVX, AVX2 or AVX512. The template parameter T can be any of:
-  /// * sp_t: single-precision floating point, corresponding to a C++ float;
+  /// * float: single-precision floating point, corresponding to a C++ float;
   /// * dp_t: double-precision floating point, corresponding to a C++ double;
   /// * ui8_t/i8_t: 8-bit unsigned/signed integral type;
   /// * ui16_t/i16_t: 16-bit unsigned/signed integral type;
-  /// * ui32_t/i32_t: 32-bit unsigned/signed integral type;
+  /// * uint32_t/i32_t: 32-bit unsigned/signed integral type;
   /// * ui64_t/i64_t: 64-bit unsigned/signed integral type.
   ///
-  /// <em>Currently, only the sp_t specialization is implemented</em>, i.e., Array<sp_t>. Developers should not use Array<sp_t>
+  /// <em>Currently, only the float specialization is implemented</em>, i.e., Array<float>. Developers should not use Array<float>
   /// directly but should instead utilize the provided typedefs:
   /// * SinglePrecisionArray;
   /// * DoublePrecisionArray.
@@ -608,7 +608,7 @@ namespace khyber
     }
   };
   
-  typedef Array<sp_t> SinglePrecisionArray;
-  typedef Array<dp_t> DoublePrecisionArray;
-  typedef Array<ui32_t> UInt32Array;
+  typedef Array<float> SinglePrecisionArray;
+  typedef Array<double> DoublePrecisionArray;
+  typedef Array<uint32_t> UInt32Array;
 }

@@ -15,7 +15,6 @@
 #pragma once
 
 #include <cstdint>
-#include "Types.hpp"
 
 namespace khyber
 {
@@ -39,9 +38,9 @@ namespace khyber
     /// \param addend
     ///
     void InternalAdd(size_t size,
-                     sp_t* sum,
-                     sp_t* augend,
-                     const sp_t* addend);
+                     float* sum,
+                     float* augend,
+                     const float* addend);
     ///
     /// \brief Change the sign of every element in src and store the result in dst
     /// \param size the number of elements in both array parameters
@@ -49,7 +48,7 @@ namespace khyber
     /// \param src
     ///
     void InternalNegate(size_t size,
-                        sp_t* dst,
-                        sp_t* src);
+                        float* dst,
+                        float* src);
   }
 }

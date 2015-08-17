@@ -22,9 +22,9 @@ namespace khyber
   namespace avx2
   {
     void InternalAdd(size_t size,
-                     sp_t* sum,
-                     sp_t* augend,
-                     const sp_t* addend)
+                     float* sum,
+                     float* augend,
+                     const float* addend)
     {
       __m256* pSum = (__m256*)sum;
       __m256* pAugend = (__m256*)augend;
@@ -42,8 +42,8 @@ namespace khyber
     }
 
     void InternalNegate(size_t size,
-                        sp_t *dst,
-                        sp_t *src)
+                        float *dst,
+                        float *src)
     {
       __m256i* pDst = (__m256i*)dst;
       __m256i* pSrc = (__m256i*)src;

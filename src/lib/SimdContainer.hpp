@@ -16,7 +16,6 @@
 
 #include <stdlib.h>
 #include <vector>
-#include "Types.hpp"
 #include "ProcessorCaps.hpp"
 #include "SimdAllocator.hpp"
 

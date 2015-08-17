@@ -15,7 +15,6 @@
 #pragma once
 
 #include <cstdint>
-#include "Types.hpp"
 
 namespace khyber
 {
@@ -39,9 +38,9 @@ namespace khyber
     /// \param addend
     ///
     void InternalAdd(size_t size,
-                     sp_t* sum,
-                     sp_t* augend,
-                     const sp_t* addend);
+                     float* sum,
+                     float* augend,
+                     const float* addend);
 
     ///
     /// \brief InternalSub subtract the single-precision array subtrahend from minuend and store the result in difference
@@ -51,9 +50,9 @@ namespace khyber
     /// \param subtrahend
     ///
     void InternalSub(size_t size,
-                     sp_t* difference,
-                     sp_t* minuend,
-                     const sp_t* subtrahend);
+                     float* difference,
+                     float* minuend,
+                     const float* subtrahend);
 
     ///
     /// \brief InternalMul multiply the single-precision arrays multiplicand and multiplier and store the result in product. This can be considered
@@ -64,9 +63,9 @@ namespace khyber
     /// \param multiplier
     ///
     void InternalMul(size_t size,
-                     sp_t* product,
-                     sp_t* multiplier,
-                     const sp_t* multiplicand);
+                     float* product,
+                     float* multiplier,
+                     const float* multiplicand);
 
     ///
     /// \brief Multiply a single-precision array by a scalar
@@ -76,9 +75,9 @@ namespace khyber
     /// \param src the array to multiply
     ///
     void InternalScalarMul(size_t size,
-                           sp_t multiplier,
-                           sp_t* product,
-                           sp_t* src);
+                           float multiplier,
+                           float* product,
+                           float* src);
 
     ///
     /// \brief InternalDiv divide the single-precision array dividend by divisor and store the results in quotient
@@ -88,9 +87,9 @@ namespace khyber
     /// \param divisor
     ///
     void InternalDiv(size_t size,
-                     sp_t* quotient,
-                     sp_t* dividend,
-                     const sp_t* divisor);
+                     float* quotient,
+                     float* dividend,
+                     const float* divisor);
 
     ///
     /// \brief Divide a single-precision array by a scalar
@@ -100,9 +99,9 @@ namespace khyber
     /// \param src the array to divide
     ///
     void InternalScalarDiv(size_t size,
-                           sp_t divisor,
-                           sp_t* quotient,
-                           sp_t* src);
+                           float divisor,
+                           float* quotient,
+                           float* src);
 
     ///
     /// \brief InternalSqrt compute the square root of every element in the single-precision array src and store the results in dst
@@ -111,8 +110,8 @@ namespace khyber
     /// \param src
     ///
     void InternalSqrt(size_t size,
-                      sp_t* dst,
-                      sp_t* src);
+                      float* dst,
+                      float* src);
 
     ///
     /// \brief InternalSquare compute the square of every element in the array src and store it in the array dst
@@ -121,8 +120,8 @@ namespace khyber
     /// \param src
     ///
     void InternalSquare(size_t size,
-                        sp_t* dst,
-                        sp_t* src);
+                        float* dst,
+                        float* src);
 
     ///
     /// \brief Compute the cube of every element in the array src and store it in the array dst.
@@ -131,8 +130,8 @@ namespace khyber
     /// \param src
     ///
     void InternalCube(size_t size,
-                      sp_t* dst,
-                      sp_t* src);
+                      float* dst,
+                      float* src);
 
     ///
     /// \brief Compute the sum of all elements in the single-precision array src, the output is a scalar. Note this is not the prefix sum,
@@ -142,8 +141,8 @@ namespace khyber
     /// \param src
     ///
     void InternalSummation(size_t size,
-                           sp_t* sum,
-                           const sp_t* src);
+                           float* sum,
+                           const float* src);
 
     ///
     /// \brief InternalPrefixSum compute the prefix sum (each element is the cumulative sum of all elements up to and including it) of the src array and store it in dst
@@ -152,8 +151,8 @@ namespace khyber
     /// \param src
     ///
     void InternalPrefixSum(size_t size,
-                           sp_t* dst,
-                           sp_t* src);
+                           float* dst,
+                           float* src);
 
     ///
     /// \brief InternalDotProduct compute the dot product of the single-precision arrays multiplicand and multiplier, store in product
@@ -163,9 +162,9 @@ namespace khyber
     /// \param multiplicand
     ///
     void InternalDotProduct(size_t size,
-                            sp_t* product,
-                            const sp_t* multiplier,
-                            const sp_t* multiplicand);
+                            float* product,
+                            const float* multiplier,
+                            const float* multiplicand);
 
     ///
     /// \brief InternalDotProductFma compute the dot product of the single-precision arrays multiplicand and multiplier using the FMA intrinsic, store in product
@@ -175,9 +174,9 @@ namespace khyber
     /// \param multiplicand
     ///
     void InternalDotProductFma(size_t size,
-                               sp_t* product,
-                               const sp_t* multiplier,
-                               const sp_t* multiplicand);
+                               float* product,
+                               const float* multiplier,
+                               const float* multiplicand);
 
     ///
     /// \brief Change the sign of every element in src and store the result in dst
@@ -186,8 +185,8 @@ namespace khyber
     /// \param src
     ///
     void InternalNegate(size_t size,
-                        sp_t* dst,
-                        sp_t* src);
+                        float* dst,
+                        float* src);
 
     ///
     /// \brief Compute the linear (geometric) distance between the two vectors, store in distance
@@ -197,9 +196,9 @@ namespace khyber
     /// \param v2 array representing 2nd point in size()-dimensional space
     ///
     void InternalDistance(size_t size,
-                          sp_t* distance,
-                          const sp_t* v1,
-                          const sp_t* v2);
+                          float* distance,
+                          const float* v1,
+                          const float* v2);
 
     ///
     /// \brief Compute the reciprocal of every element in the src array and store it in the dst array
@@ -208,7 +207,7 @@ namespace khyber
     /// \param src source array
     ///
     void InternalReciprocate(size_t size,
-                             sp_t* dst,
-                             sp_t* src);
+                             float* dst,
+                             float* src);
   }
 }

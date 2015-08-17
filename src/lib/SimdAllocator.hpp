@@ -16,6 +16,9 @@
 
 #include <stdlib.h>
 #include <xmmintrin.h>
+#include <boost/cstdint.hpp>
+
+const size_t DEFAULT_ALIGNMENT = 32;
 
 namespace khyber
 {

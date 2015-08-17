@@ -22,9 +22,9 @@ namespace khyber
   namespace avx
   {
     void InternalAdd(size_t size,
-                     sp_t* sum,
-                     sp_t* augend,
-                     const sp_t* addend)
+                     float* sum,
+                     float* augend,
+                     const float* addend)
     {
       __m256* pSum = (__m256*)sum;
       __m256* pAugend = (__m256*)augend;
@@ -42,9 +42,9 @@ namespace khyber
     }
 
     void InternalSub(size_t size,
-                     sp_t* difference,
-                     sp_t* minuend,
-                     const sp_t* subtrahend)
+                     float* difference,
+                     float* minuend,
+                     const float* subtrahend)
     {
       __m256* pDifference = (__m256*)difference;
       __m256* pMinuend = (__m256*)minuend;
@@ -62,9 +62,9 @@ namespace khyber
     }
 
     void InternalMul(size_t size,
-                     sp_t* product,
-                     sp_t* multiplier,
-                     const sp_t* multiplicand)
+                     float* product,
+                     float* multiplier,
+                     const float* multiplicand)
     {
       __m256* pProduct = (__m256*)product;
       __m256* pMultiplier = (__m256*)multiplier;
@@ -82,9 +82,9 @@ namespace khyber
     }
 
     void InternalScalarMul(size_t size,
-                           sp_t multiplier,
-                           sp_t *product,
-                           sp_t *src)
+                           float multiplier,
+                           float *product,
+                           float *src)
     {
       __m256* pSrc = (__m256*)src;
       __m256* pProduct = (__m256*)product;
@@ -102,9 +102,9 @@ namespace khyber
     }
     
     void InternalDiv(size_t size,
-                     sp_t* quotient,
-                     sp_t* dividend,
-                     const sp_t* divisor)
+                     float* quotient,
+                     float* dividend,
+                     const float* divisor)
     {
       __m256* pQuotient = (__m256*)quotient;
       __m256* pDividend = (__m256*)dividend;
@@ -122,9 +122,9 @@ namespace khyber
     }
 
     void InternalScalarDiv(size_t size,
-                           sp_t divisor,
-                           sp_t* quotient,
-                           sp_t* src)
+                           float divisor,
+                           float* quotient,
+                           float* src)
     {
       __m256* pSrc = (__m256*)src;
       __m256* pQuotient = (__m256*)quotient;
@@ -142,8 +142,8 @@ namespace khyber
     }
 
     void InternalSqrt(size_t size,
-                      sp_t* dst,
-                      sp_t* src)
+                      float* dst,
+                      float* src)
     {
       __m256* pDst = (__m256*)dst;
       __m256* pSrc = (__m256*)src;
@@ -160,8 +160,8 @@ namespace khyber
     }
 
     void InternalSquare(size_t size,
-                        sp_t *dst,
-                        sp_t *src)
+                        float *dst,
+                        float *src)
     {
       __m256* pDst = (__m256*)dst;
       __m256* pSrc = (__m256*)src;
@@ -178,8 +178,8 @@ namespace khyber
     }
 
     void InternalCube(size_t size,
-                      sp_t *dst,
-                      sp_t *src)
+                      float *dst,
+                      float *src)
     {
       __m256* pDst = (__m256*)dst;
       __m256* pSrc = (__m256*)src;
@@ -197,8 +197,8 @@ namespace khyber
     }
 
     void InternalSummation(size_t size,
-                           sp_t* sum,
-                           const sp_t* src)
+                           float* sum,
+                           const float* src)
     {
       __m256 scratch;
       __m256 accumulator = _mm256_setzero_ps();
@@ -210,7 +210,7 @@ namespace khyber
         accumulator = _mm256_add_ps(accumulator, scratch);
       }
 
-      sp_t* tmp = (sp_t*)&accumulator;
+      float* tmp = (float*)&accumulator;
       *sum = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
       i <<= 3;
       while ( i < size ) {
@@ -218,15 +218,15 @@ namespace khyber
       }
     }
 
-    void InternalPrefixSum(size_t size, sp_t *dst, sp_t *src)
+    void InternalPrefixSum(size_t size, float *dst, float *src)
     {
       // TODO: Implement this.
     }
 
     void InternalDotProduct(size_t size,
-                            sp_t *product,
-                            const sp_t *multiplier,
-                            const sp_t *multiplicand)
+                            float *product,
+                            const float *multiplier,
+                            const float *multiplicand)
     {
       __m256* pMultiplier = (__m256*)multiplier;
       __m256* pMultiplicand = (__m256*)multiplicand;
@@ -239,7 +239,7 @@ namespace khyber
         accumulator = _mm256_add_ps(accumulator, scratch);
       }
 
-      sp_t* tmp = (sp_t*)&accumulator;
+      float* tmp = (float*)&accumulator;
       *product = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
       i <<= 3;
       for ( ; i < size; ++i ) {
@@ -248,9 +248,9 @@ namespace khyber
     }
 
     void InternalDotProductFma(size_t size,
-                               sp_t* product,
-                               const sp_t* multiplier,
-                               const sp_t* multiplicand)
+                               float* product,
+                               const float* multiplier,
+                               const float* multiplicand)
     {
       __m256* pMultiplier = (__m256*)multiplier;
       __m256* pMultiplicand = (__m256*)multiplicand;
@@ -261,7 +261,7 @@ namespace khyber
         accumulator = _mm256_fmadd_ps(pMultiplier[i], pMultiplicand[i], accumulator);
       }
 
-      sp_t* tmp = (sp_t*)&accumulator;
+      float* tmp = (float*)&accumulator;
       *product = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
       i <<= 3;
       for ( ; i < size; ++i ) {
@@ -270,8 +270,8 @@ namespace khyber
     }
 
     void InternalNegate(size_t size,
-                        sp_t *dst,
-                        sp_t *src)
+                        float *dst,
+                        float *src)
     {
       // This implementation uses 128bit XMM registers instead of the 256bit YMM registers because
       // AVX includes only 128bit integer instructions only, unlike for floating point where it can
@@ -292,9 +292,9 @@ namespace khyber
     }
 
     void InternalDistance(size_t size,
-                          sp_t* distance,
-                          const sp_t *v1,
-                          const sp_t *v2)
+                          float* distance,
+                          const float *v1,
+                          const float *v2)
     {
       const __m256* pV1 = (const __m256*)v1;
       const __m256* pV2 = (const __m256*)v2;
@@ -308,7 +308,7 @@ namespace khyber
         accumulator = _mm256_add_ps(accumulator, scratch);
       }
 
-      sp_t* tmp = (sp_t*)&accumulator;
+      float* tmp = (float*)&accumulator;
       *distance = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
       i <<= 3;
       for ( ; i < size; ++i ) {
@@ -318,8 +318,8 @@ namespace khyber
     }
 
     void InternalReciprocate(size_t size,
-                             sp_t *dst,
-                             sp_t *src)
+                             float *dst,
+                             float *src)
     {
       __m256* pDst = (__m256*)dst;
       __m256* pSrc = (__m256*)src;

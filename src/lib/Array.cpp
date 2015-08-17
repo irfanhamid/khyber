@@ -21,7 +21,7 @@ namespace khyber
   /////////////////////////// Programmer API //////////////////////////////////
 
   template<>
-  Array<sp_t> Array<sp_t>::Add(const Array<sp_t>& addend)
+  Array<float> Array<float>::Add(const Array<float>& addend)
   {
     // This ugliness (and the one in AddAcc( ) is for pointer-to-member-function
     // I know we could use boost::function, and I did, but that is much slower
@@ -29,137 +29,137 @@ namespace khyber
   }
   
   template<>
-  Array<sp_t>& Array<sp_t>::Add(Array<sp_t> &augend,
-                                const Array<sp_t> &addend)
+  Array<float>& Array<float>::Add(Array<float> &augend,
+                                const Array<float> &addend)
   {
     return (this->*Add2Impl)(augend, addend);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::Sub(const Array<sp_t>& subtrahend)
+  Array<float> Array<float>::Sub(const Array<float>& subtrahend)
   {
     return (this->*SubImpl)(subtrahend);
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::Sub(Array<sp_t> &minuend,
-                                const Array<sp_t> &subtrahend)
+  Array<float>& Array<float>::Sub(Array<float> &minuend,
+                                const Array<float> &subtrahend)
   {
     return (this->*Sub2Impl)(minuend, subtrahend);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::Mul(const Array<sp_t> &multiplier)
+  Array<float> Array<float>::Mul(const Array<float> &multiplier)
   {
     return (this->*MulImpl)(multiplier);
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::Mul(Array<sp_t> &multiplier,
-                                const Array<sp_t> &multiplicand)
+  Array<float>& Array<float>::Mul(Array<float> &multiplier,
+                                const Array<float> &multiplicand)
   {
     return (this->*Mul2Impl)(multiplier, multiplicand);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::ScalarMul(sp_t multiplier)
+  Array<float> Array<float>::ScalarMul(float multiplier)
   {
     return (this->*ScalarMulImpl)(multiplier);
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::TransformScalarMul(sp_t multiplier)
+  Array<float>& Array<float>::TransformScalarMul(float multiplier)
   {
     return (this->*TransformScalarMulImpl)(multiplier);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::Div(const Array<sp_t> &divisor)
+  Array<float> Array<float>::Div(const Array<float> &divisor)
   {
     return (this->*DivImpl)(divisor);
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::Div(Array<sp_t> &dividend,
-                                const Array<sp_t> &divisor)
+  Array<float>& Array<float>::Div(Array<float> &dividend,
+                                const Array<float> &divisor)
   {
     return (this->*Div2Impl)(dividend, divisor);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::ScalarDiv(sp_t divisor)
+  Array<float> Array<float>::ScalarDiv(float divisor)
   {
     return (this->*ScalarDivImpl)(divisor);
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::TransformScalarDiv(sp_t divisor)
+  Array<float>& Array<float>::TransformScalarDiv(float divisor)
   {
     return (this->*TransformScalarDivImpl)(divisor);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::Sqrt()
+  Array<float> Array<float>::Sqrt()
   {
     return (this->*SqrtImpl)();
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::Sqrt(Array<sp_t>& src)
+  Array<float>& Array<float>::Sqrt(Array<float>& src)
   {
     return (this->*Sqrt2Impl)(src);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::Square()
+  Array<float> Array<float>::Square()
   {
     return (this->*SquareImpl)();
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::Square(Array<sp_t>& src)
+  Array<float>& Array<float>::Square(Array<float>& src)
   {
     return (this->*Square2Impl)(src);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::Cube()
+  Array<float> Array<float>::Cube()
   {
     return (this->*CubeImpl)();
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::Cube(Array<sp_t>& src)
+  Array<float>& Array<float>::Cube(Array<float>& src)
   {
     return (this->*Cube2Impl)(src);
   }
 
   template<>
-  sp_t Array<sp_t>::DotProduct(const Array<sp_t>& multiplicand) const
+  float Array<float>::DotProduct(const Array<float>& multiplicand) const
   {
     return (this->*DotProductImpl)(multiplicand);
   }
 
   template<>
-  sp_t Array<sp_t>::Summation() const
+  float Array<float>::Summation() const
   {
     return (this->*SummationImpl)();
   }
 
   template<>
-  sp_t Array<sp_t>::Distance(const Array<sp_t>& v2) const
+  float Array<float>::Distance(const Array<float>& v2) const
   {
     return (this->*DistanceImpl)(v2);
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::Reciprocate()
+  Array<float> Array<float>::Reciprocate()
   {
     return (this->*ReciprocateImpl)();
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::TransformReciprocate()
+  Array<float>& Array<float>::TransformReciprocate()
   {
     return (this->*TransformReciprocateImpl)();
   }
@@ -171,9 +171,9 @@ namespace khyber
   /////////////////////// AVX implementation dispatchers //////////////////////
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxAddImpl(const Array<sp_t>& addend)
+  Array<float> Array<float>::AvxAddImpl(const Array<float>& addend)
   {
-    Array<sp_t> sum(this->_buffer.size());
+    Array<float> sum(this->_buffer.size());
     avx::InternalAdd(this->_buffer.size(),
                      sum._buffer.data(),
                      this->_buffer.data(),
@@ -182,8 +182,8 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxAdd2Impl(Array<sp_t> &augend,
-                                        const Array<sp_t> &addend)
+  Array<float>& Array<float>::AvxAdd2Impl(Array<float> &augend,
+                                        const Array<float> &addend)
   {
     avx::InternalAdd(this->_buffer.size(),
                      this->_buffer.data(),
@@ -193,9 +193,9 @@ namespace khyber
   }
   
   template<>
-  Array<sp_t> Array<sp_t>::AvxSubImpl(const Array<sp_t> &subtrahend)
+  Array<float> Array<float>::AvxSubImpl(const Array<float> &subtrahend)
   {
-    Array<sp_t> difference(this->_buffer.size());
+    Array<float> difference(this->_buffer.size());
     avx::InternalSub(this->_buffer.size(),
                      difference._buffer.data(),
                      this->_buffer.data(),
@@ -204,8 +204,8 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxSub2Impl(Array<sp_t>& minuend,
-                                        const Array<sp_t>& subtrahend)
+  Array<float>& Array<float>::AvxSub2Impl(Array<float>& minuend,
+                                        const Array<float>& subtrahend)
   {
     avx::InternalSub(this->size(),
                      this->data(),
@@ -215,9 +215,9 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxMulImpl(const Array<sp_t> &multiplier)
+  Array<float> Array<float>::AvxMulImpl(const Array<float> &multiplier)
   {
-    Array<sp_t> product(this->size());
+    Array<float> product(this->size());
     avx::InternalMul(this->size(),
                      product.data(),
                      this->data(),
@@ -226,8 +226,8 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxMul2Impl(Array<sp_t> &multiplier,
-                                        const Array<sp_t> &multiplicand)
+  Array<float>& Array<float>::AvxMul2Impl(Array<float> &multiplier,
+                                        const Array<float> &multiplicand)
   {
     avx::InternalMul(this->size(),
                      this->data(),
@@ -237,7 +237,7 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxTransformScalarMulImpl(sp_t multiplier)
+  Array<float>& Array<float>::AvxTransformScalarMulImpl(float multiplier)
   {
     avx::InternalScalarMul(this->size(),
                            multiplier,
@@ -247,16 +247,16 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxScalarMulImpl(sp_t multiplier)
+  Array<float> Array<float>::AvxScalarMulImpl(float multiplier)
   {
-    Array<sp_t> product(this->size());
+    Array<float> product(this->size());
     return std::move(AvxTransformScalarMulImpl(multiplier));
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxDivImpl(const Array<sp_t> &divisor)
+  Array<float> Array<float>::AvxDivImpl(const Array<float> &divisor)
   {
-    Array<sp_t> quotient(divisor.size());
+    Array<float> quotient(divisor.size());
     avx::InternalDiv(this->size(),
                      quotient.data(),
                      this->data(),
@@ -265,8 +265,8 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxDiv2Impl(Array<sp_t> &dividend,
-                                        const Array<sp_t> &divisor)
+  Array<float>& Array<float>::AvxDiv2Impl(Array<float> &dividend,
+                                        const Array<float> &divisor)
   {
     avx::InternalDiv(this->size(),
                      this->data(),
@@ -276,7 +276,7 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxTransformScalarDivImpl(sp_t divisor)
+  Array<float>& Array<float>::AvxTransformScalarDivImpl(float divisor)
   {
     avx::InternalScalarDiv(this->size(),
                            divisor,
@@ -286,16 +286,16 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxScalarDivImpl(sp_t divisor)
+  Array<float> Array<float>::AvxScalarDivImpl(float divisor)
   {
-    Array<sp_t> quotient(this->size());
+    Array<float> quotient(this->size());
     return std::move(AvxTransformScalarDivImpl(divisor));
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxSqrtImpl()
+  Array<float> Array<float>::AvxSqrtImpl()
   {
-    Array<sp_t> result(this->_buffer.size());
+    Array<float> result(this->_buffer.size());
     avx::InternalSqrt(this->_buffer.size(),
                       result._buffer.data(),
                       this->_buffer.data());
@@ -303,7 +303,7 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxSqrt2Impl(Array<sp_t>& src)
+  Array<float>& Array<float>::AvxSqrt2Impl(Array<float>& src)
   {
     avx::InternalSqrt(this->size(),
                       this->data(),
@@ -312,9 +312,9 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxSquareImpl()
+  Array<float> Array<float>::AvxSquareImpl()
   {
-    Array<sp_t> result(this->size());
+    Array<float> result(this->size());
     avx::InternalSquare(this->size(),
                         result.data(),
                         this->data());
@@ -322,7 +322,7 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxSquare2Impl(Array<sp_t>& src)
+  Array<float>& Array<float>::AvxSquare2Impl(Array<float>& src)
   {
     avx::InternalSquare(this->size(),
                         this->data(),
@@ -331,9 +331,9 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxCubeImpl()
+  Array<float> Array<float>::AvxCubeImpl()
   {
-    Array<sp_t> result(this->size());
+    Array<float> result(this->size());
     avx::InternalCube(this->size(),
                       result.data(),
                       this->data());
@@ -341,7 +341,7 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxCube2Impl(Array<sp_t>& src)
+  Array<float>& Array<float>::AvxCube2Impl(Array<float>& src)
   {
     avx::InternalCube(this->size(),
                       this->data(),
@@ -350,9 +350,9 @@ namespace khyber
   }
 
   template<>
-  sp_t Array<sp_t>::AvxDotProductImpl(const Array<sp_t> &multiplicand) const
+  float Array<float>::AvxDotProductImpl(const Array<float> &multiplicand) const
   {
-    sp_t dotProduct = 0;
+    float dotProduct = 0;
     avx::InternalDotProduct(this->size(),
                             &dotProduct,
                             this->data(),
@@ -361,9 +361,9 @@ namespace khyber
   }
 
   template<>
-  sp_t Array<sp_t>::AvxSummationImpl() const
+  float Array<float>::AvxSummationImpl() const
   {
-    sp_t sigma = 0;
+    float sigma = 0;
     avx::InternalSummation(this->size(),
                            &sigma,
                            this->data());
@@ -371,9 +371,9 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxNegateImpl()
+  Array<float> Array<float>::AvxNegateImpl()
   {
-    Array<sp_t> negated(this->size());
+    Array<float> negated(this->size());
     avx::InternalNegate(this->size(),
                         negated.data(),
                         this->data());
@@ -381,7 +381,7 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxNegate2Impl(Array<sp_t>& src)
+  Array<float>& Array<float>::AvxNegate2Impl(Array<float>& src)
   {
     avx::InternalNegate(this->size(),
                         this->data(),
@@ -390,9 +390,9 @@ namespace khyber
   }
 
   template<>
-  sp_t Array<sp_t>::AvxDistanceImpl(const Array<sp_t>& v2) const
+  float Array<float>::AvxDistanceImpl(const Array<float>& v2) const
   {
-    sp_t distance = 0.0;
+    float distance = 0.0;
     avx::InternalDistance(this->size(),
                           &distance,
                           this->data(),
@@ -401,14 +401,14 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t> Array<sp_t>::AvxReciprocateImpl()
+  Array<float> Array<float>::AvxReciprocateImpl()
   {
-    Array<sp_t> reciprocal(this->size());
+    Array<float> reciprocal(this->size());
     return std::move(reciprocal.TransformReciprocate());
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::AvxTransformReciprocateImpl()
+  Array<float>& Array<float>::AvxTransformReciprocateImpl()
   {
     avx::InternalReciprocate(this->size(),
                              this->data(),
@@ -423,9 +423,9 @@ namespace khyber
   ////////////////////// AVX2 implementation dispatchers //////////////////////
 
   template<>
-  Array<sp_t> Array<sp_t>::Avx2AddImpl(const Array<sp_t>& addend)
+  Array<float> Array<float>::Avx2AddImpl(const Array<float>& addend)
   {
-    Array<sp_t> sum(this->_buffer.size());
+    Array<float> sum(this->_buffer.size());
     avx2::InternalAdd(this->_buffer.size(),
 		      sum._buffer.data(),
 		      this->_buffer.data(),
@@ -434,8 +434,8 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::Avx2Add2Impl(Array<sp_t> &augend,
-					 const Array<sp_t> &addend)
+  Array<float>& Array<float>::Avx2Add2Impl(Array<float> &augend,
+					 const Array<float> &addend)
   {
     avx2::InternalAdd(this->_buffer.size(),
 		      this->_buffer.data(),
@@ -445,9 +445,9 @@ namespace khyber
   }
   
   template<>
-  Array<sp_t> Array<sp_t>::Avx2NegateImpl()
+  Array<float> Array<float>::Avx2NegateImpl()
   {
-    Array<sp_t> negated(this->size());
+    Array<float> negated(this->size());
     avx2::InternalNegate(this->size(),
                          negated.data(),
                          this->data());
@@ -455,7 +455,7 @@ namespace khyber
   }
 
   template<>
-  Array<sp_t>& Array<sp_t>::Avx2Negate2Impl(Array<sp_t>& src)
+  Array<float>& Array<float>::Avx2Negate2Impl(Array<float>& src)
   {
     avx2::InternalNegate(this->size(),
                          this->data(),
@@ -466,64 +466,64 @@ namespace khyber
   /////////////////////////////////////////////////////////////////////////////
 
   template<>
-  void Array<sp_t>::BuildFallbackArchBinding()
+  void Array<float>::BuildFallbackArchBinding()
   {
-    AddImpl = &Array<sp_t>::FallbackAddImpl;
-    Add2Impl = &Array<sp_t>::FallbackAdd2Impl;
-    SubImpl = &Array<sp_t>::FallbackSubImpl;
-    Sub2Impl = &Array<sp_t>::FallbackSub2Impl;
-    MulImpl = &Array<sp_t>::FallbackMulImpl;
-    Mul2Impl = &Array<sp_t>::FallbackMul2Impl;
-    DivImpl = &Array<sp_t>::FallbackDivImpl;
-    Div2Impl = &Array<sp_t>::FallbackDiv2Impl;
-    SqrtImpl = &Array<sp_t>::FallbackSqrtImpl;
-    Sqrt2Impl = &Array<sp_t>::FallbackSqrt2Impl;
-    SquareImpl = &Array<sp_t>::FallbackSquareImpl;
-    Square2Impl = &Array<sp_t>::FallbackSquare2Impl;
-    CubeImpl = &Array<sp_t>::FallbackCubeImpl;
-    Cube2Impl = &Array<sp_t>::FallbackCube2Impl;
-    DotProductImpl = &Array<sp_t>::FallbackDotProductImpl;
-    SummationImpl = &Array<sp_t>::FallbackSummationImpl;
-    NegateImpl = &Array<sp_t>::FallbackNegateImpl;
-    Negate2Impl = &Array<sp_t>::FallbackNegate2Impl;
-    DistanceImpl = &Array<sp_t>::FallbackDistanceImpl;
+    AddImpl = &Array<float>::FallbackAddImpl;
+    Add2Impl = &Array<float>::FallbackAdd2Impl;
+    SubImpl = &Array<float>::FallbackSubImpl;
+    Sub2Impl = &Array<float>::FallbackSub2Impl;
+    MulImpl = &Array<float>::FallbackMulImpl;
+    Mul2Impl = &Array<float>::FallbackMul2Impl;
+    DivImpl = &Array<float>::FallbackDivImpl;
+    Div2Impl = &Array<float>::FallbackDiv2Impl;
+    SqrtImpl = &Array<float>::FallbackSqrtImpl;
+    Sqrt2Impl = &Array<float>::FallbackSqrt2Impl;
+    SquareImpl = &Array<float>::FallbackSquareImpl;
+    Square2Impl = &Array<float>::FallbackSquare2Impl;
+    CubeImpl = &Array<float>::FallbackCubeImpl;
+    Cube2Impl = &Array<float>::FallbackCube2Impl;
+    DotProductImpl = &Array<float>::FallbackDotProductImpl;
+    SummationImpl = &Array<float>::FallbackSummationImpl;
+    NegateImpl = &Array<float>::FallbackNegateImpl;
+    Negate2Impl = &Array<float>::FallbackNegate2Impl;
+    DistanceImpl = &Array<float>::FallbackDistanceImpl;
   }
 
   template<>
-  void Array<sp_t>::BuildAvxArchBinding()
+  void Array<float>::BuildAvxArchBinding()
   {
-    AddImpl = &Array<sp_t>::AvxAddImpl;
-    Add2Impl = &Array<sp_t>::AvxAdd2Impl;
-    SubImpl = &Array<sp_t>::AvxSubImpl;
-    Sub2Impl = &Array<sp_t>::AvxSub2Impl;
-    MulImpl = &Array<sp_t>::AvxMulImpl;
-    Mul2Impl = &Array<sp_t>::AvxMul2Impl;
-    DivImpl = &Array<sp_t>::AvxDivImpl;
-    Div2Impl = &Array<sp_t>::AvxDiv2Impl;
-    SqrtImpl = &Array<sp_t>::AvxSqrtImpl;
-    Sqrt2Impl = &Array<sp_t>::AvxSqrt2Impl;
-    SquareImpl = &Array<sp_t>::AvxSquareImpl;
-    Square2Impl = &Array<sp_t>::AvxSquare2Impl;
-    CubeImpl = &Array<sp_t>::AvxCubeImpl;
-    Cube2Impl = &Array<sp_t>::AvxCube2Impl;
-    DotProductImpl = &Array<sp_t>::AvxDotProductImpl;
-    SummationImpl = &Array<sp_t>::AvxSummationImpl;
-    NegateImpl = &Array<sp_t>::AvxNegateImpl;
-    Negate2Impl = &Array<sp_t>::AvxNegate2Impl;
-    DistanceImpl = &Array<sp_t>::AvxDistanceImpl;
+    AddImpl = &Array<float>::AvxAddImpl;
+    Add2Impl = &Array<float>::AvxAdd2Impl;
+    SubImpl = &Array<float>::AvxSubImpl;
+    Sub2Impl = &Array<float>::AvxSub2Impl;
+    MulImpl = &Array<float>::AvxMulImpl;
+    Mul2Impl = &Array<float>::AvxMul2Impl;
+    DivImpl = &Array<float>::AvxDivImpl;
+    Div2Impl = &Array<float>::AvxDiv2Impl;
+    SqrtImpl = &Array<float>::AvxSqrtImpl;
+    Sqrt2Impl = &Array<float>::AvxSqrt2Impl;
+    SquareImpl = &Array<float>::AvxSquareImpl;
+    Square2Impl = &Array<float>::AvxSquare2Impl;
+    CubeImpl = &Array<float>::AvxCubeImpl;
+    Cube2Impl = &Array<float>::AvxCube2Impl;
+    DotProductImpl = &Array<float>::AvxDotProductImpl;
+    SummationImpl = &Array<float>::AvxSummationImpl;
+    NegateImpl = &Array<float>::AvxNegateImpl;
+    Negate2Impl = &Array<float>::AvxNegate2Impl;
+    DistanceImpl = &Array<float>::AvxDistanceImpl;
   }
 
   template<>
-  void Array<sp_t>::BuildAvx2ArchBinding()
+  void Array<float>::BuildAvx2ArchBinding()
   {
-    AddImpl = &Array<sp_t>::Avx2AddImpl;
-    Add2Impl = &Array<sp_t>::Avx2Add2Impl;
-    NegateImpl = &Array<sp_t>::Avx2NegateImpl;
-    Negate2Impl = &Array<sp_t>::Avx2Negate2Impl;
+    AddImpl = &Array<float>::Avx2AddImpl;
+    Add2Impl = &Array<float>::Avx2Add2Impl;
+    NegateImpl = &Array<float>::Avx2NegateImpl;
+    Negate2Impl = &Array<float>::Avx2Negate2Impl;
   }
 
   template<>
-  void Array<sp_t>::BuildArchBinding()
+  void Array<float>::BuildArchBinding()
   {
     BuildFallbackArchBinding();
 

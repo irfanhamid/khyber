@@ -45,7 +45,8 @@ user object provided by this library.
 `\   |`  
 `\   |--- arch/avx: optimized vector operations with AVX instruction sets`  
 `\   |`  
-`\   |--- arch/avx2: optimized vector operations with the AVX2 instruction sets`  
+`&nbsp;
+&nbsp;&nbsp|--- arch/avx2: optimized vector operations with the AVX2 instruction sets`  
 `src/unittest: unittests for the library`  
 `benchmarks: performance benchmarks for the khyber library comparing to stock
 C++ generated code`

@@ -21,17 +21,35 @@ some other numerical operations such as square root and reciprocation. Detailed
 documentation of operations provided can be found in the doxygen help for the
 library.
 
+## Building
+
+khyber uses cmake to configure and create make files for each
+architecture. Currently khyber works on Linux and Mac OSX. It requires clang
+LLVM 3.6.0 or gcc 4.8 at a minimum due to its use of C++11 features like rvalue
+references. In order to build `libkhyber.a` please git clone the master
+repository and invoke `cmake .` from the root khyber directory. In case you have
+the compiler aliased to some name you can pass that via CMAKE_CXX_COMPILER:
+
+`cmake . -DCMAKE_CXX_COMPILER=g++-4.8`
+
+Once your Makefiles are generated, you can invoke `make` from any location and
+build all child directories. `libkhyber.a` will be generated in `khyber/src/lib/`.
+
 ## Structure
 
 The library is layered with the programmer API at the top, present in the khyber
 namespace. This is where the `Array<T>` class is defined, which is the primary
 user object provided by this library.
 
-`khyber: programmer API Array<T>, ProcessorCaps, SimdAllocator and SimdContainer`  
+`src/lib: programmer API Array<T>, ProcessorCaps, SimdAllocator and SimdContainer`  
 `   |`  
 `   |--- arch/avx: optimized vector operations with AVX instruction sets`  
 `   |`  
 `   |--- arch/avx2: optimized vector operations with the AVX2 instruction sets`  
+`src/unittest: unittests for the library`  
+`benchmarks: performance benchmarks for the khyber library comparing to stock
+C++ generated code`
+`scratchpad: experimentation code location`  
 
 ## Optimization mechanism
 

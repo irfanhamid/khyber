@@ -27,10 +27,10 @@ namespace khyber
     // I know we could use boost::function, and I did, but that is much slower
     return (this->*AddImpl)(addend);
   }
-  
+
   template<>
   Array<float>& Array<float>::Add(Array<float> &augend,
-                                const Array<float> &addend)
+                                  const Array<float> &addend)
   {
     return (this->*Add2Impl)(augend, addend);
   }
@@ -43,7 +43,7 @@ namespace khyber
 
   template<>
   Array<float>& Array<float>::Sub(Array<float> &minuend,
-                                const Array<float> &subtrahend)
+                                  const Array<float> &subtrahend)
   {
     return (this->*Sub2Impl)(minuend, subtrahend);
   }
@@ -56,7 +56,7 @@ namespace khyber
 
   template<>
   Array<float>& Array<float>::Mul(Array<float> &multiplier,
-                                const Array<float> &multiplicand)
+                                  const Array<float> &multiplicand)
   {
     return (this->*Mul2Impl)(multiplier, multiplicand);
   }
@@ -81,7 +81,7 @@ namespace khyber
 
   template<>
   Array<float>& Array<float>::Div(Array<float> &dividend,
-                                const Array<float> &divisor)
+                                  const Array<float> &divisor)
   {
     return (this->*Div2Impl)(dividend, divisor);
   }
@@ -191,7 +191,7 @@ namespace khyber
                      addend._buffer.data());
     return *this;
   }
-  
+
   template<>
   Array<float> Array<float>::AvxSubImpl(const Array<float> &subtrahend)
   {
@@ -525,12 +525,12 @@ namespace khyber
   template<>
   void Array<float>::BuildArchBinding()
   {
-    BuildFallbackArchBinding();
-
     if ( _procCaps.IsAvx() ) {
       BuildAvxArchBinding();
     } else if ( _procCaps.IsAvx2() ) {
       BuildAvx2ArchBinding();
+    } else {
+      BuildFallbackArchBinding();
     }
   }
 }

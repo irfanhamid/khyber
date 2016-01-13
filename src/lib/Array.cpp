@@ -29,8 +29,8 @@ namespace khyber
   }
 
   template<>
-  Array<float>& Array<float>::Add(Array<float> &augend,
-                                  const Array<float> &addend)
+  Array<float>& Array<float>::Add(Array<float>& augend,
+                                  const Array<float>& addend)
   {
     return (this->*Add2Impl)(augend, addend);
   }
@@ -42,8 +42,8 @@ namespace khyber
   }
 
   template<>
-  Array<float>& Array<float>::Sub(Array<float> &minuend,
-                                  const Array<float> &subtrahend)
+  Array<float>& Array<float>::Sub(Array<float>& minuend,
+                                  const Array<float>& subtrahend)
   {
     return (this->*Sub2Impl)(minuend, subtrahend);
   }
@@ -55,8 +55,8 @@ namespace khyber
   }
 
   template<>
-  Array<float>& Array<float>::Mul(Array<float> &multiplier,
-                                  const Array<float> &multiplicand)
+  Array<float>& Array<float>::Mul(Array<float>& multiplier,
+                                  const Array<float>& multiplicand)
   {
     return (this->*Mul2Impl)(multiplier, multiplicand);
   }
@@ -80,8 +80,8 @@ namespace khyber
   }
 
   template<>
-  Array<float>& Array<float>::Div(Array<float> &dividend,
-                                  const Array<float> &divisor)
+  Array<float>& Array<float>::Div(Array<float>& dividend,
+                                  const Array<float>& divisor)
   {
     return (this->*Div2Impl)(dividend, divisor);
   }
@@ -183,7 +183,7 @@ namespace khyber
 
   template<>
   Array<float>& Array<float>::AvxAdd2Impl(Array<float> &augend,
-                                        const Array<float> &addend)
+					  const Array<float> &addend)
   {
     avx::InternalAdd(this->_buffer.size(),
                      this->_buffer.data(),
@@ -205,7 +205,7 @@ namespace khyber
 
   template<>
   Array<float>& Array<float>::AvxSub2Impl(Array<float>& minuend,
-                                        const Array<float>& subtrahend)
+					  const Array<float>& subtrahend)
   {
     avx::InternalSub(this->size(),
                      this->data(),
@@ -227,7 +227,7 @@ namespace khyber
 
   template<>
   Array<float>& Array<float>::AvxMul2Impl(Array<float> &multiplier,
-                                        const Array<float> &multiplicand)
+					  const Array<float> &multiplicand)
   {
     avx::InternalMul(this->size(),
                      this->data(),
@@ -266,7 +266,7 @@ namespace khyber
 
   template<>
   Array<float>& Array<float>::AvxDiv2Impl(Array<float> &dividend,
-                                        const Array<float> &divisor)
+					  const Array<float> &divisor)
   {
     avx::InternalDiv(this->size(),
                      this->data(),
@@ -435,7 +435,7 @@ namespace khyber
 
   template<>
   Array<float>& Array<float>::Avx2Add2Impl(Array<float> &augend,
-					 const Array<float> &addend)
+					   const Array<float> &addend)
   {
     avx2::InternalAdd(this->_buffer.size(),
 		      this->_buffer.data(),

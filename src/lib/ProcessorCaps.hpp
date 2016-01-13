@@ -23,6 +23,7 @@
 __asm__ __volatile__ ("cpuid":          \
 "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx) : "a" (func), "c" (ecx));
 
+#define LSB_8 0x000000FF
 #define BM_NO 0x00000000
 #define BM_00 0x00000001
 #define BM_01 0x00000002
@@ -101,14 +102,14 @@ namespace khyber
       brandPtr[2] = ecx;
       _brand[12] = '\0';
 
-      cpuid(0x8000, eax, ebx, ecx, edx);
-      HighestExtFunction = eax;
-
-      if ( HighestFunction >= 4 ) {
+      cpuid(0x80000000, eax, ebx, ecx, edx);
+      HighestExtFunction = eax & 0x000000FF;
+      if ( HighestFunction >= 6 ) {
         // Now we query the caches
         eax = 4;
         ecx = 0;
-        cpuid(0x0004, eax, ebx, ecx, edx);
+        cpuid(0x80000006, eax, ebx, ecx, edx);
+	L2CachelineBytes = ecx & LSB_8;
       }
       
       if ( HighestFunction >= 1 ) {
@@ -245,12 +246,13 @@ namespace khyber
       capsStream << "AVX2\t" << (IsAvx2() ? "yes" : "no") << std::endl;
       capsStream << "AVX512F\t" << (IsAvx512F() ? "yes" : "no") << std::endl;
       capsStream << "FMA\t" << (IsFma() ? "yes" : "no") << std::endl;
+      capsStream << "L2 line\t" << L2CachelineBytes << " bytes" << std::endl;
       
       return capsStream.str();
     }
     
-    std::size_t L1Cacheline;      /// L1 cacheline size, in bytes
-    std::size_t L2Cacheline;      /// L2 cacheline size, in bytes
+    std::size_t L1CachelineBytes; /// L1 cacheline size, in bytes
+    std::size_t L2CachelineBytes; /// L2 cacheline size, in bytes
     uint32_t HighestFunction;     /// Highest supported function for the CPUID instruction
     uint32_t HighestExtFunction;  /// Highest supported extension function for the CPUID instruction
     

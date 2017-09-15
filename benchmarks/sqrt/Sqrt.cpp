@@ -57,8 +57,8 @@ private:
   SinglePrecisionArray _simdSrc;
   SinglePrecisionArray _simdDst;
 
-  std::vector<sp_t> _src;
-  std::vector<sp_t> _dst;
+  std::vector<float> _src;
+  std::vector<float> _dst;
 };
 
 SqrtBenchmarks theApp;
